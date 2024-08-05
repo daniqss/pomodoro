@@ -1,10 +1,16 @@
-import {useState, useEffect} from 'react';
-import {TimerState} from '../types/TimerState';
+import { useState, useEffect, useContext } from 'react';
+import { TimerContext } from '../contexts/timer';
 
-function useTimer(initialMinutes: number, isPaused: boolean) {
+function useTimer(initialMinutes: number) {
+    const context = useContext(TimerContext);
+
+    if (!context) {
+        throw new Error("useTimer must be used within a TimerProvider");
+    }
+
+    const { isPaused, timerState, setTimerState } = context;
     const [minutes, setMinutes] = useState(initialMinutes);
     const [seconds, setSeconds] = useState(0);
-    const [timerState, setTimerState] = useState<TimerState>('focus')
 
     function setNextTimerState() {
         if (timerState === 'focus') {
@@ -30,7 +36,7 @@ function useTimer(initialMinutes: number, isPaused: boolean) {
             }
             if (seconds === 0) {
                 if (minutes === 0) {
-                    setNextTimerState()
+                    setNextTimerState();
                     clearInterval(interval);
                 } else {
                     setMinutes(minutes - 1);
@@ -42,7 +48,7 @@ function useTimer(initialMinutes: number, isPaused: boolean) {
         return () => clearInterval(interval);
     }, [minutes, seconds, isPaused]);
 
-    return {minutes, seconds, timerState};
+    return { minutes, seconds, timerState };
 }
 
 export default useTimer;

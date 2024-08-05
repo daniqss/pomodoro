@@ -1,15 +1,17 @@
-import { useState } from 'react';
+import { useContext } from 'react';
 import useTimer from '../hooks/useTimer'
-
-const timerClasses = {
-    focus: 'bg-red-300 text-gray-800 p-4 text-center rounded',
-    shortBreak: 'bg-blue-300 text-gray-800 p-4 text-center rounded',
-    longBreak: 'bg-green-300 text-gray-800 p-4 text-center rounded'
-};
+import PlayIcon from './icons/playIcon'
+import { TimerContext } from '../contexts/timer';
 
 function Timer () {
-    const [isPaused, setIsPaused] = useState(true);
-    const {minutes, seconds, timerState} = useTimer(1, isPaused)
+    const context = useContext(TimerContext);
+
+    if (!context) {
+        throw new Error("useTimer must be used within a TimerProvider");
+    }
+
+    const { isPaused, setIsPaused, timerState, timerClasses } = context;
+    const {minutes, seconds} = useTimer(1)
 
 
 
@@ -17,8 +19,11 @@ function Timer () {
         <section className={timerClasses[timerState]}>
             <p className="text-2xl font-bold">{minutes < 10 ? `0${minutes}` : minutes}:{seconds < 10 ? `0${seconds}` : seconds}</p>
 
-            <button onClick={() => setIsPaused(!isPaused)} className="bg-gray-800 text-white p-2 rounded mt-4">
-                {isPaused ? 'Start' : 'Pause'}
+            <button onClick={() => setIsPaused(!isPaused)} className="bg-zinc-800 text-white p-2 rounded mt-4">
+                <div className='flex flex-row justify-between p-2'>
+                    <PlayIcon/>
+                    {isPaused ? 'Start' : 'Pause'}
+                </div>
             </button>
         </section>
     )
