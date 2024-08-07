@@ -42,7 +42,7 @@ function Timer () {
                     </>
                 ) : (
                     <>
-                    <PauseIcon className={`fill${timerClasses.darkFill[timerState]} w-6 h-6 mr-1`} />
+                    <PauseIcon className={`${timerClasses.darkFill[timerState]} w-6 h-6 mr-1`} />
                     <p className="font-bold">Pause</p>
                     </>
                 )}
