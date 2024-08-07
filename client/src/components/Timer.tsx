@@ -21,20 +21,20 @@ function Timer () {
 
 
     return ( 
-        <section className={timerClasses[timerState]}>
-            <p className="text-2xl font-bold">{minutes < 10 ? `0${minutes}` : minutes}:{seconds < 10 ? `0${seconds}` : seconds}</p>
+        <section className={`${timerClasses[timerState]} mx-60`}>
+            <p className="text-8xl font-bold text-zinc-800">{minutes < 10 ? `0${minutes}` : minutes}:{seconds < 10 ? `0${seconds}` : seconds}</p>
 
             <button onClick={() => setIsPaused(!isPaused)} className="bg-zinc-800 text-white p-2 rounded mt-4">
                 <div className='flex flex-row justify-between p-2'>
                 {isPaused ? (
                     <>
                     <PlayIcon className={timerClasses.icons[timerState]} />
-                    Start
+                    <p>Start</p>
                     </>
                 ) : (
                     <>
                     <PauseIcon className={timerClasses.icons[timerState]} />
-                    Pause
+                    <p>Pause</p>
                     </>
                 )}
                 </div>
