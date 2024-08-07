@@ -1,7 +1,8 @@
 import { useContext } from 'react';
 import useTimer from '../hooks/useTimer'
-import PlayIcon from './icons/playIcon'
 import { TimerContext } from '../contexts/timer';
+import PlayIcon from './icons/playIcon'
+import PauseIcon from './icons/pauseIcon';
 
 function Timer () {
     const context = useContext(TimerContext);
@@ -21,8 +22,17 @@ function Timer () {
 
             <button onClick={() => setIsPaused(!isPaused)} className="bg-zinc-800 text-white p-2 rounded mt-4">
                 <div className='flex flex-row justify-between p-2'>
-                <PlayIcon className={timerClasses.icons[timerState]}/>
-                    {isPaused ? 'Start' : 'Pause'}
+                {isPaused ? (
+                    <>
+                    <PlayIcon className={timerClasses.icons[timerState]} />
+                    Start
+                    </>
+                ) : (
+                    <>
+                    <PauseIcon className={timerClasses.icons[timerState]} />
+                    Pause
+                    </>
+                )}
                 </div>
             </button>
         </section>
