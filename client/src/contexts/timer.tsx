@@ -12,6 +12,11 @@ type TimerContextType = {
       longBreak: string;
     };
   };
+  initialTimes: {
+    focus: {minutes: number, seconds: number};
+    shortBreak: {minutes: number, seconds: number};
+    longBreak: {minutes: number, seconds: number};
+  }
   isPaused: boolean;
   setIsPaused: Dispatch<SetStateAction<boolean>>;
   timerState: TimerState;
@@ -31,6 +36,11 @@ function TimerProvider({ children }: { children: ReactNode }) {
       longBreak: 'fill-green-400 w-6 h-6 mr-1',
     }
   };
+  const initialTimes = {
+    focus: {minutes: 25, seconds: 0},
+    shortBreak: {minutes: 5, seconds: 0},
+    longBreak: {minutes: 15, seconds: 0}
+  };
   const [isPaused, setIsPaused] = useState(true);
   const [timerState, setTimerState] = useState<TimerState>('focus');
 
@@ -38,6 +48,7 @@ function TimerProvider({ children }: { children: ReactNode }) {
     <TimerContext.Provider
       value={{
         timerClasses,
+        initialTimes,
         isPaused,
         setIsPaused,
         timerState,

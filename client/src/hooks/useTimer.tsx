@@ -1,14 +1,14 @@
 import { useState, useEffect, useContext } from 'react';
 import { TimerContext } from '../contexts/timer';
 
-function useTimer(initialMinutes: number, initialSeconds: number  = 0) {
+function useTimer(initialMinutes: number, initialSeconds: number ) {
     const context = useContext(TimerContext);
 
     if (!context) {
         throw new Error("useTimer must be used within a TimerProvider");
     }
 
-    const { isPaused, timerState, setTimerState } = context;
+    const { isPaused, setIsPaused, timerState, setTimerState } = context;
     const [minutes, setMinutes] = useState(initialMinutes);
     const [seconds, setSeconds] = useState(initialSeconds);
 
@@ -23,6 +23,7 @@ function useTimer(initialMinutes: number, initialSeconds: number  = 0) {
 
         setSeconds(initialSeconds);
         setMinutes(initialMinutes);
+        setIsPaused(true);
     }
 
     useEffect(() => {
