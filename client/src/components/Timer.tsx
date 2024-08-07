@@ -19,8 +19,8 @@ function Timer () {
     );
 
     return ( 
-        <section className={`bg${timerClasses.light[timerState]} mx-60 text-gray-800 p-4 text-center rounded`}>
-            <h2 className={`text-2xl font-bold bg${timerClasses.dark[timerState]} mb-6 inline-block px-2 py-1 rounded shadow-md`}>
+        <section className={`${timerClasses.lightBg[timerState]} mx-60 text-gray-800 p-4 text-center rounded`}>
+            <h2 className={`text-2xl font-bold ${timerClasses.darkBg[timerState]} mb-6 inline-block px-2 py-1 rounded shadow-md`}>
                 {
                     timerState === 'focus' ? 'Focus' : 
                     timerState === 'shortBreak' ? 'Short Break' : 'Long Break'
@@ -36,13 +36,13 @@ function Timer () {
                 {isPaused ? (
                     <>
                     <PlayIcon 
-                        className={`fill${timerClasses.dark[timerState]} w-6 h-6 mr-1`}
+                        className={`${timerClasses.darkFill[timerState]} w-6 h-6 mr-1`}
                     />
                     <p className="font-bold">Start</p>
                     </>
                 ) : (
                     <>
-                    <PauseIcon className={`fill${timerClasses.dark[timerState]} w-6 h-6 mr-1`} />
+                    <PauseIcon className={`fill${timerClasses.darkFill[timerState]} w-6 h-6 mr-1`} />
                     <p className="font-bold">Pause</p>
                     </>
                 )}

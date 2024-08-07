@@ -9,8 +9,10 @@ type timerClassesType = {
 
 type TimerContextType = {
   timerClasses: {
-    light: timerClassesType;
-    dark: timerClassesType;
+    lightBg: timerClassesType;
+    darkBg: timerClassesType;
+    lightFill: timerClassesType;
+    darkFill: timerClassesType;
   };
   initialTimes: {
     focus: {minutes: number, seconds: number};
@@ -27,16 +29,27 @@ const TimerContext = createContext<TimerContextType | null>(null);
 
 function TimerProvider({ children }: { children: ReactNode }) {
   const timerClasses = {
-    light: {
-      focus: '-red-300',
-      shortBreak: '-blue-300',
-      longBreak: '-green-300',
+    lightBg: {
+      focus: 'bg-red-300',
+      shortBreak: 'bg-blue-300',
+      longBreak: 'bg-green-300',
     },
-    dark: {
-      focus: '-red-400',
-      shortBreak: '-blue-400',
-      longBreak: '-green-400',
+    darkBg: {
+      focus: 'bg-red-400',
+      shortBreak: 'bg-blue-400',
+      longBreak: 'bg-green-400',
+    },
+    lightFill: {
+      focus: 'fill-red-300',
+      shortBreak: 'fill-blue-300',
+      longBreak: 'fill-green-300',
+    },
+    darkFill: {
+      focus: 'fill-red-400',
+      shortBreak: 'fill-blue-400',
+      longBreak: 'fill-green-400',
     }
+
   }
   const initialTimes = {
     focus: {minutes: 25, seconds: 0},
