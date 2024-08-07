@@ -21,7 +21,7 @@ function useTimer(initialMinutes: number, initialSeconds: number  = 0) {
             setTimerState('focus');
         }
 
-        setSeconds(0);
+        setSeconds(initialSeconds);
         setMinutes(initialMinutes);
     }
 
