@@ -1,19 +1,15 @@
-interface PlayIconProps {
-    className?: string;
-  }
-
-function PlayIcon({ className }: PlayIconProps) {
+function PlayIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
-      className={className}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
       viewBox="0 0 24 24"
+      fill="currentColor"
+      height="1em"
+      width="1em"
+      {...props}
     >
-      <path d="M7 6v12l10-6z"></path>
+      <path d="M7 6v12l10-6z" />
     </svg>
   );
 }
-  
+
 export default PlayIcon;

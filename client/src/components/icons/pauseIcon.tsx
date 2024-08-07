@@ -1,19 +1,15 @@
-interface PauseIconProps {
-    className?: string;
-}
-
-function PauseIcon({ className }: PauseIconProps) {
+function PauseIcon(props: React.SVGProps<SVGSVGElement>) {
     return (
         <svg
-            className={className}
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
             viewBox="0 0 24 24"
+            fill="currentColor"
+            height="1em"
+            width="1em"
+            {...props}
         >
-            <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"></path>
-        </svg>
+        <path d="M11 7H8v10h3V7zM13 17h3V7h-3v10z" />
+      </svg>
     );
-}
-
-export default PauseIcon;
+  }
+  
+  export default PauseIcon;
