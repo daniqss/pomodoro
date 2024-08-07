@@ -11,7 +11,7 @@ function Timer () {
     }
 
     const { isPaused, setIsPaused, timerState, timerClasses } = context;
-    const {minutes, seconds} = useTimer(1)
+    const {minutes, seconds} = useTimer(0, 5)
 
 
 
@@ -21,7 +21,7 @@ function Timer () {
 
             <button onClick={() => setIsPaused(!isPaused)} className="bg-zinc-800 text-white p-2 rounded mt-4">
                 <div className='flex flex-row justify-between p-2'>
-                    <PlayIcon/>
+                <PlayIcon className={timerClasses.icons[timerState]}/>
                     {isPaused ? 'Start' : 'Pause'}
                 </div>
             </button>
