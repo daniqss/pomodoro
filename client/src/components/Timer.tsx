@@ -21,7 +21,10 @@ function Timer () {
     return ( 
         <section className={`bg${timerClasses.light[timerState]} mx-60 text-gray-800 p-4 text-center rounded`}>
             <h2 className={`text-2xl font-bold bg${timerClasses.dark[timerState]} mb-6 inline-block px-2 py-1 rounded shadow-md`}>
-                {timerState.charAt(0).toUpperCase() + timerState.slice(1)}
+                {
+                    timerState === 'focus' ? 'Focus' : 
+                    timerState === 'shortBreak' ? 'Short Break' : 'Long Break'
+                }
             </h2>
             <p className="text-8xl font-bold text-zinc-800">{minutes < 10 ? `0${minutes}` : minutes}:{seconds < 10 ? `0${seconds}` : seconds}</p>
 
