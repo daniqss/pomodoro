@@ -7,7 +7,7 @@ type timerClassesType = {
   longBreak: string;
 }
 
-type TimerContextType = {
+export type TimerContextType = {
   timerClasses: {
     lightBg: timerClassesType;
     darkBg: timerClassesType;

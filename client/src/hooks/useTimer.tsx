@@ -1,14 +1,8 @@
 import { useState, useEffect, useContext } from 'react';
-import { TimerContext } from '../contexts/timer';
+import { TimerContext, TimerContextType } from '../contexts/timer';
 
 function useTimer(initialMinutes: number, initialSeconds: number ) {
-    const context = useContext(TimerContext);
-
-    if (!context) {
-        throw new Error("useTimer must be used within a TimerProvider");
-    }
-
-    const { isPaused, setIsPaused, timerState, setTimerState } = context;
+    const { isPaused, setIsPaused, timerState, setTimerState } = useContext(TimerContext) as TimerContextType;
     const [minutes, setMinutes] = useState(initialMinutes);
     const [seconds, setSeconds] = useState(initialSeconds);
 

@@ -1,20 +1,14 @@
-import { io } from "socket.io-client"
 import Timer from "./components/Timer"
 import Header from "./components/Header"
-
-const socket = io('/');
-socket.on('connect', () => {
-  console.log('Connected to server');
-})
+import ConnectionMenu from "./components/ConnectioMenu"
 
 function App() {
-
-
   return (
     <>
       <main className="mx-12">
         <Header/>
         <Timer/>
+        <ConnectionMenu/>
       </main>
     </>
   )

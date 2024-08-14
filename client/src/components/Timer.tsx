@@ -1,18 +1,12 @@
 import { useContext } from 'react';
 import useTimer from '../hooks/useTimer'
-import { TimerContext } from '../contexts/timer';
+import { TimerContext, TimerContextType } from '../contexts/timer';
 import PlayIcon from './icons/playIcon'
 import PauseIcon from './icons/pauseIcon';
 import { IS_DEV } from '../utils/config';
 
 function Timer () {
-    const context = useContext(TimerContext);
-
-    if (!context) {
-        throw new Error("useTimer must be used within a TimerProvider");
-    }
-
-    const { isPaused, setIsPaused, timerState, timerClasses, initialTimes } = context;
+    const { isPaused, setIsPaused, timerState, timerClasses, initialTimes } = useContext(TimerContext) as TimerContextType;
     const {minutes, seconds} = useTimer(
         IS_DEV ? 0 : initialTimes[timerState].minutes, 
         IS_DEV ? 5 : initialTimes[timerState].seconds
