@@ -11,5 +11,5 @@ function PauseIcon(props: React.SVGProps<SVGSVGElement>) {
     </svg>
   );
 }
-  
-  export default PauseIcon;
+
+export default PauseIcon;

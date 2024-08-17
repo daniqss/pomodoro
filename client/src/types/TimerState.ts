@@ -1,1 +1,1 @@
-export type TimerState = 'focus' | 'shortBreak' | 'longBreak';
+export type TimerState = "focus" | "shortBreak" | "longBreak";
