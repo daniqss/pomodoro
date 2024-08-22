@@ -17,7 +17,6 @@ function App() {
         ) : (
           <>
             <ConnectionData />
-            <p>mega xd</p>
           </>
         )}
       </main>

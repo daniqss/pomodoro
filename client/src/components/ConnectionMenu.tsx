@@ -1,5 +1,6 @@
 import { useContext, useState } from "react";
 import { WsContext, WsContextType } from "../contexts/ws";
+import { roomCreatedMessage, roomJoinedMessage } from "../../../types/messages";
 
 type ConnectionMenuProps = {
   setIsConnected: React.Dispatch<React.SetStateAction<boolean>>;
@@ -19,11 +20,17 @@ function ConnectionMenu({ setIsConnected }: ConnectionMenuProps) {
             e.preventDefault();
             console.log(`Joining room ${joinValue}`);
             socket.emit("join-room", joinValue);
-            socket.on("room-joined", (room: string) => {
-              console.log(`Room joined: ${room}`);
-              setRoom(room);
+            socket.on("room-joined", (roomData: roomJoinedMessage) => {
+              if (typeof roomData === "string") {
+                console.error(`Error joining room: ${roomData}`);
+                return;
+              }
+              console.log(`Room joined:`, roomData);
+              console.log(`Room joined:`, roomData.room);
+
+              setRoom(roomData.room);
+              setIsConnected(true);
             });
-            setIsConnected(true);
           }}
         >
           Join Room
@@ -46,7 +53,7 @@ function ConnectionMenu({ setIsConnected }: ConnectionMenuProps) {
         onClick={() => {
           console.log("Creating room");
           socket.emit("create-room");
-          socket.on("room-created", (room: string) => {
+          socket.on("room-created", (room: roomCreatedMessage) => {
             console.log(`Room created: ${room}`);
             setRoom(room);
           });

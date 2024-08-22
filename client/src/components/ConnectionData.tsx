@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { WsContext, WsContextType } from "../contexts/ws";
 import ClipboardIcon from "./icons/clipboardIcon";
+// import PartnerList from "./PartnerList";
 
 function ConnectionData() {
   const { room } = useContext(WsContext) as WsContextType & { room: string };
@@ -11,18 +12,23 @@ function ConnectionData() {
       <p className="text-white text-lg">
         Share this room name with your partners to start working!
       </p>
+
       <article className="inline-flex items-center justify-center w-auto bg-white rounded-lg text-zinc-950 p-2 shadow-lg min-h-4 m-auto mt-5">
         <h4 className="text-xl mr-4">Room name:</h4>
         <div className="text-white rounded-md flex flex-row bg-zinc-800">
           <p className="px-2 py-1">{room}</p>
           <button
-            className="px-3 py-1 hover:bg-zinc-600"
+            className="px-3 py-1 hover:bg-zinc-600 rounded"
             onClick={() => navigator.clipboard.writeText(room)}
           >
             <ClipboardIcon />
           </button>
         </div>
       </article>
+
+      {/* <article>
+        <PartnerList />
+      </article> */}
     </section>
   );
 }

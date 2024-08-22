@@ -5,7 +5,7 @@ import {
   useState,
   ReactNode,
 } from "react";
-import { TimerState } from "../types/TimerState";
+import { TimerState } from "../../../types/TimerState";
 
 type timerClassesType = {
   focus: string;
