@@ -3,8 +3,9 @@ import { Server } from "socket.io";
 import { createServer } from "node:http";
 import RoomsController from "./messages/roomMessages.js";
 import debug from "./utils/debug.js";
-import { joinRoomMessage } from "../../types/messages.js";
+import { joinRoomMessage, updatedTimerMessage } from "../../types/messages.js";
 import RoomServerMessages from "./messages/roomMessages.js";
+import TimerServerMessages from "./messages/timerMessages.js";
 const port = process.env.PORT ?? 3000;
 
 const app = express();
@@ -17,6 +18,8 @@ app.get("/rooms/", (req, res) => {
 
 io.on("connection", (socket) => {
   debug(`socket ${socket.id} connected`);
+
+  // room messages
   socket.on("create-room", () => RoomServerMessages.createRoom(socket));
   socket.on("join-room", (room: joinRoomMessage) =>
     RoomServerMessages.joinRoom(
@@ -24,6 +27,11 @@ io.on("connection", (socket) => {
       room,
       io.sockets.adapter.rooms.get(room),
     ),
+  );
+
+  // timer messages
+  socket.on("timer-updated", (updatedTimer: updatedTimerMessage) =>
+    TimerServerMessages.timerUpdated(socket, updatedTimer),
   );
 
   socket.on("disconnect", () => RoomServerMessages.userDisconnect(socket));

@@ -1,17 +1,37 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import useTimer from "../hooks/useTimer";
 import { TimerContext, TimerContextType } from "../contexts/timer";
 import PlayIcon from "./icons/playIcon";
 import PauseIcon from "./icons/pauseIcon";
 import { IS_DEV } from "../utils/config";
+import { WsContext, WsContextType } from "../contexts/ws";
+import { updatedTimerMessage } from "../../../types/messages";
 
 function Timer() {
   const { isPaused, setIsPaused, timerState, timerClasses, initialTimes } =
     useContext(TimerContext) as TimerContextType;
-  const { minutes, seconds } = useTimer(
+  const { socket } = useContext(WsContext) as WsContextType;
+  const { minutes, seconds, setMinutes, setSeconds, setTimerState } = useTimer(
     IS_DEV ? 0 : initialTimes[timerState].minutes,
-    IS_DEV ? 5 : initialTimes[timerState].seconds,
+    IS_DEV ? 20 : initialTimes[timerState].seconds,
   );
+
+  useEffect(() => {
+    socket.on(
+      "timer-updated",
+      ({
+        isPaused,
+        newMinutes,
+        newSeconds,
+        timerState,
+      }: updatedTimerMessage) => {
+        setIsPaused(isPaused);
+        setMinutes(newMinutes);
+        setSeconds(newSeconds);
+        setTimerState(timerState);
+      },
+    );
+  }, [socket]);
 
   return (
     <section
@@ -32,7 +52,18 @@ function Timer() {
       </p>
 
       <button
-        onClick={() => setIsPaused(!isPaused)}
+        onClick={() => {
+          setIsPaused(!isPaused);
+          setMinutes(minutes);
+          setSeconds(seconds);
+          setTimerState(timerState);
+          socket.emit("timer-updated", {
+            isPaused: !isPaused,
+            newMinutes: minutes,
+            newSeconds: seconds,
+            timerState: timerState,
+          });
+        }}
         className="bg-zinc-800 text-white p-2 rounded mt-4 shadow-lg hover:shadow-none"
       >
         <div className="flex flex-row justify-between p-2">

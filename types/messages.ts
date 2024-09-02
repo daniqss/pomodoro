@@ -10,7 +10,7 @@ export type joinSuccefullyMessage = {
 export type roomJoinedMessage = joinSuccefullyMessage | string;
 export type userJoinedMessage = string;
 
-export type playStopTimerMessage = {
+export type updatedTimerMessage = {
   isPaused: boolean;
   newMinutes: number;
   newSeconds: number;

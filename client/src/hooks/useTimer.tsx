@@ -45,7 +45,14 @@ function useTimer(initialMinutes: number, initialSeconds: number) {
     return () => clearInterval(interval);
   }, [minutes, seconds, isPaused]);
 
-  return { minutes, seconds, timerState };
+  return {
+    minutes,
+    seconds,
+    setMinutes,
+    setSeconds,
+    timerState,
+    setTimerState,
+  };
 }
 
 export default useTimer;
