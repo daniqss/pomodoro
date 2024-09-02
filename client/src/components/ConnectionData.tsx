@@ -29,9 +29,15 @@ function ConnectionData({ users }: { users: string[] }) {
         <div className="mt-5">
           <h3 className="text-white text-2xl">Connected partners:</h3>
           <ul className="text-white text-lg">
-            {users.map((user, index) => (
-              <li key={index}>{user}</li>
-            ))}
+            {users.map((user, index) =>
+              index === 0 ? (
+                <li key={index}>
+                  <b>you</b>: {user}
+                </li>
+              ) : (
+                <li key={index}>{user}</li>
+              ),
+            )}
           </ul>
         </div>
       ) : (

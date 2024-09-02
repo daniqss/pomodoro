@@ -30,7 +30,16 @@ function ConnectionMenu({ setIsConnected, setUsers }: ConnectionMenuProps) {
               console.log(`Room joined:`, roomData.room);
 
               setRoom(roomData.room);
-              setUsers(roomData.users);
+              console.log(`Room joined:`, roomData.users);
+              setUsers((prev) => {
+                if (prev[0] === undefined) {
+                  return [
+                    socket.id,
+                    ...roomData.users.filter((user) => user !== socket.id),
+                  ];
+                }
+                return roomData.users;
+              });
               setIsConnected(true);
             });
           }}

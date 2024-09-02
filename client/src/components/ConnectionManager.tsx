@@ -7,21 +7,16 @@ import { userJoinedMessage } from "../../../types/messages";
 function ConnectionManager() {
   const { socket } = useContext(WsContext) as WsContextType;
   const [isConnected, setIsConnected] = useState(false);
-  const userId = socket.id;
-  const [users, setUsers] = useState<string[]>([userId]);
-
-  // Add the user to the list of users
-  // if it's add when we initialize the state
-  // the socket may not be connected yet
-  useEffect(() => {
-    if (socket.id) {
-      setUsers([socket.id]);
-    }
-  }, [socket.id]);
+  const [users, setUsers] = useState<string[]>([]);
 
   useEffect(() => {
     const handleUserJoined = (userJoinedMessage: userJoinedMessage) => {
-      setUsers((prev) => [...prev, userJoinedMessage]);
+      setUsers((prev) => {
+        if (prev[0] === undefined) {
+          return [socket.id, userJoinedMessage];
+        }
+        return [...prev, userJoinedMessage];
+      });
     };
 
     socket.on("user-joined", handleUserJoined);
