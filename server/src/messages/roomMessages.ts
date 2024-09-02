@@ -11,10 +11,11 @@ import {
 
 export default class RoomServerMessages {
   // Server creates the room, join the rooms owner and sends a message to him
-  static createRoom(socket: Socket) {
+  static createRoom(socket: Socket): string {
     const roomId: roomCreatedMessage = uuid();
     socket.join(roomId);
     socket.emit("room-created", roomId);
+    return roomId;
   }
 
   // Server joins the room and sends a message to
@@ -43,9 +44,12 @@ export default class RoomServerMessages {
   }
 
   // desconnect a user from a room and notify the rest of the users in the room
-  static userDisconnect(socket: Socket) {
-    Object.keys(socket.rooms).forEach((room) => {
+  static userDisconnect(socket: Socket, room: string, users: Set<string>) {
+    debug(`User ${socket.id} from room ${room} disconnected`);
+
+    if (users) {
+      users.delete(socket.id);
       socket.to(room).emit("user-disconnected", socket.id);
-    });
+    }
   }
 }

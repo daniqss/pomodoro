@@ -27,8 +27,10 @@ function ConnectionManager() {
   }, [socket]);
 
   useEffect(() => {
-    console.log("users updated", users); // Esto reflejará el estado actualizado
-  }, [users]); // Este useEffect se ejecuta cuando `users` cambia
+    socket.on("user-disconnected", (userId: string) => {
+      setUsers((prev) => prev.filter((user) => user !== userId));
+    });
+  });
 
   return (
     <section>
