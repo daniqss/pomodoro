@@ -3,10 +3,11 @@ import { WsContext, WsContextType } from "../contexts/ws";
 import { roomCreatedMessage, roomJoinedMessage } from "../../../types/messages";
 
 type ConnectionMenuProps = {
+  setUsers: React.Dispatch<React.SetStateAction<string[]>>;
   setIsConnected: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-function ConnectionMenu({ setIsConnected }: ConnectionMenuProps) {
+function ConnectionMenu({ setIsConnected, setUsers }: ConnectionMenuProps) {
   const { socket, setRoom } = useContext(WsContext) as WsContextType;
   const [joinValue, setJoinValue] = useState("");
 
@@ -29,6 +30,7 @@ function ConnectionMenu({ setIsConnected }: ConnectionMenuProps) {
               console.log(`Room joined:`, roomData.room);
 
               setRoom(roomData.room);
+              setUsers(roomData.users);
               setIsConnected(true);
             });
           }}

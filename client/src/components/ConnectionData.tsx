@@ -1,9 +1,8 @@
 import { useContext } from "react";
 import { WsContext, WsContextType } from "../contexts/ws";
 import ClipboardIcon from "./icons/clipboardIcon";
-// import PartnerList from "./PartnerList";
 
-function ConnectionData() {
+function ConnectionData({ users }: { users: string[] }) {
   const { room } = useContext(WsContext) as WsContextType & { room: string };
 
   return (
@@ -26,9 +25,18 @@ function ConnectionData() {
         </div>
       </article>
 
-      {/* <article>
-        <PartnerList />
-      </article> */}
+      {users.length > 1 ? (
+        <div className="mt-5">
+          <h3 className="text-white text-2xl">Connected partners:</h3>
+          <ul className="text-white text-lg">
+            {users.map((user, index) => (
+              <li key={index}>{user}</li>
+            ))}
+          </ul>
+        </div>
+      ) : (
+        <h3 className="text-white text-2xl">Waiting for partners to join...</h3>
+      )}
     </section>
   );
 }
