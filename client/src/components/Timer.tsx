@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import useTimer from "../hooks/useTimer";
 import { TimerContext, TimerContextType } from "../contexts/timer";
 import PlayIcon from "./icons/playIcon";
@@ -10,11 +10,13 @@ import { updatedTimerMessage } from "../../../types/messages";
 function Timer() {
   const { isPaused, setIsPaused, timerState, timerClasses, initialTimes } =
     useContext(TimerContext) as TimerContextType;
-  const { socket } = useContext(WsContext) as WsContextType;
+  const { socket, room } = useContext(WsContext) as WsContextType;
   const { minutes, seconds, setMinutes, setSeconds, setTimerState } = useTimer(
     IS_DEV ? 0 : initialTimes[timerState].minutes,
     IS_DEV ? 20 : initialTimes[timerState].seconds,
   );
+
+  const [lastEmittedTime, setLastEmittedTime] = useState(0);
 
   useEffect(() => {
     socket.on(
@@ -25,13 +27,37 @@ function Timer() {
         newSeconds,
         timerState,
       }: updatedTimerMessage) => {
-        setIsPaused(isPaused);
-        setMinutes(newMinutes);
-        setSeconds(newSeconds);
-        setTimerState(timerState);
+        // Convertir tiempos a segundos para comparar
+        const currentClientTimeInSeconds = minutes * 60 + seconds;
+        const newTimeInSeconds = newMinutes * 60 + newSeconds;
+
+        // Si el tiempo actual del cliente es mayor que el nuevo tiempo recibido
+        if (currentClientTimeInSeconds < newTimeInSeconds) {
+          // Emitir el tiempo actual del cliente solo si es mayor que el último tiempo emitido
+          if (currentClientTimeInSeconds > lastEmittedTime) {
+            socket.emit("timer-updated", {
+              isPaused: isPaused,
+              newMinutes: minutes,
+              newSeconds: seconds,
+              timerState: timerState,
+            });
+            setLastEmittedTime(currentClientTimeInSeconds);
+          }
+        } else {
+          // Actualizar el estado del cliente con el tiempo nuevo recibido
+          setIsPaused(isPaused);
+          setMinutes(newMinutes);
+          setSeconds(newSeconds);
+          setTimerState(timerState);
+        }
       },
     );
-  }, [socket]);
+
+    // Cleanup function to remove the event listener when the component is unmounted or socket changes
+    return () => {
+      socket.off("timer-updated");
+    };
+  }, [socket, minutes, seconds, lastEmittedTime]);
 
   return (
     <section
@@ -58,6 +84,7 @@ function Timer() {
           setSeconds(seconds);
           setTimerState(timerState);
           socket.emit("timer-updated", {
+            room: room,
             isPaused: !isPaused,
             newMinutes: minutes,
             newSeconds: seconds,
