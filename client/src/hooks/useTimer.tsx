@@ -1,12 +1,18 @@
-import { useState, useEffect, useContext } from "react";
+import { useEffect, useContext } from "react";
 import { TimerContext, TimerContextType } from "../contexts/timer";
 
-function useTimer(initialMinutes: number, initialSeconds: number) {
-  const { isPaused, setIsPaused, timerState, setTimerState } = useContext(
-    TimerContext,
-  ) as TimerContextType;
-  const [minutes, setMinutes] = useState(initialMinutes);
-  const [seconds, setSeconds] = useState(initialSeconds);
+function useTimer() {
+  const {
+    minutes,
+    setMinutes,
+    seconds,
+    setSeconds,
+    initialTimes,
+    isPaused,
+    setIsPaused,
+    timerState,
+    setTimerState,
+  } = useContext(TimerContext) as TimerContextType;
 
   function setNextTimerState() {
     if (timerState === "focus") {
@@ -17,8 +23,8 @@ function useTimer(initialMinutes: number, initialSeconds: number) {
       setTimerState("focus");
     }
 
-    setSeconds(initialSeconds);
-    setMinutes(initialMinutes);
+    setSeconds(initialTimes[timerState].seconds);
+    setMinutes(initialTimes[timerState].minutes);
     setIsPaused(true);
   }
 

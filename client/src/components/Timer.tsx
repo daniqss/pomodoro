@@ -3,18 +3,16 @@ import useTimer from "../hooks/useTimer";
 import { TimerContext, TimerContextType } from "../contexts/timer";
 import PlayIcon from "./icons/playIcon";
 import PauseIcon from "./icons/pauseIcon";
-import { IS_DEV } from "../utils/config";
 import { WsContext, WsContextType } from "../contexts/ws";
 import { updatedTimerMessage } from "../../../types/messages";
 
 function Timer() {
-  const { isPaused, setIsPaused, timerState, timerClasses, initialTimes } =
-    useContext(TimerContext) as TimerContextType;
+  const { isPaused, setIsPaused, timerState, timerClasses } = useContext(
+    TimerContext,
+  ) as TimerContextType;
   const { socket, room } = useContext(WsContext) as WsContextType;
-  const { minutes, seconds, setMinutes, setSeconds, setTimerState } = useTimer(
-    IS_DEV ? 0 : initialTimes[timerState].minutes,
-    IS_DEV ? 20 : initialTimes[timerState].seconds,
-  );
+  const { minutes, seconds, setMinutes, setSeconds, setTimerState } =
+    useTimer();
 
   const [lastEmittedTime, setLastEmittedTime] = useState(0);
 

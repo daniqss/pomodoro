@@ -6,6 +6,9 @@ import {
   ReactNode,
 } from "react";
 import { TimerState } from "../../../types/TimerState";
+import { IS_DEV } from "../utils/config";
+
+type minutesSecondsType = { minutes: number; seconds: number };
 
 type timerClassesType = {
   focus: string;
@@ -21,10 +24,14 @@ export type TimerContextType = {
     darkFill: timerClassesType;
   };
   initialTimes: {
-    focus: { minutes: number; seconds: number };
-    shortBreak: { minutes: number; seconds: number };
-    longBreak: { minutes: number; seconds: number };
+    focus: minutesSecondsType;
+    shortBreak: minutesSecondsType;
+    longBreak: minutesSecondsType;
   };
+  minutes: number;
+  setMinutes: Dispatch<SetStateAction<number>>;
+  seconds: number;
+  setSeconds: Dispatch<SetStateAction<number>>;
   isPaused: boolean;
   setIsPaused: Dispatch<SetStateAction<boolean>>;
   timerState: TimerState;
@@ -57,16 +64,30 @@ function TimerProvider({ children }: { children: ReactNode }) {
     },
   };
   const initialTimes = {
-    focus: { minutes: 25, seconds: 0 },
-    shortBreak: { minutes: 5, seconds: 0 },
-    longBreak: { minutes: 15, seconds: 0 },
+    focus: IS_DEV ? { minutes: 0, seconds: 25 } : { minutes: 25, seconds: 0 },
+    shortBreak: IS_DEV
+      ? { minutes: 0, seconds: 5 }
+      : { minutes: 5, seconds: 0 },
+    longBreak: IS_DEV
+      ? { minutes: 0, seconds: 15 }
+      : { minutes: 15, seconds: 0 },
   };
+  const [minutes, setMinutes] = useState(
+    IS_DEV ? initialTimes.focus.minutes : initialTimes.focus.minutes,
+  );
+  const [seconds, setSeconds] = useState(
+    IS_DEV ? initialTimes.focus.seconds : initialTimes.focus.seconds,
+  );
   const [isPaused, setIsPaused] = useState(true);
   const [timerState, setTimerState] = useState<TimerState>("focus");
 
   return (
     <TimerContext.Provider
       value={{
+        minutes,
+        setMinutes,
+        seconds,
+        setSeconds,
         timerClasses,
         initialTimes,
         isPaused,
