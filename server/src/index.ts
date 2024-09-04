@@ -18,15 +18,15 @@ const io = new Server(server);
 // middleware to serve the static files
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const rootPath = path.resolve(__dirname, "../../../../");
-app.use(express.static(path.join(rootPath, "client/dist")));
+const rootPath = path.resolve(__dirname, "dist/../../../");
+app.use(express.static(path.join(rootPath, "client/")));
 
 // save the rooms in memory (bad implementation, they stay in memory despite the room being empty)
 const rooms: string[] = [];
 
 // serve the client build
 app.get("/", (req, res) => {
-  res.sendFile(path.join(rootPath, "client/dist/index.html"));
+  res.sendFile(path.join(rootPath, "client/index.html"));
 });
 
 // debug endpoint
