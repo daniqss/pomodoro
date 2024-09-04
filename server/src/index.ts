@@ -1,4 +1,6 @@
 import express from "express";
+import path from "path";
+import { fileURLToPath } from "url";
 import { Server } from "socket.io";
 import { createServer } from "node:http";
 import RoomsController from "./messages/roomMessages.js";
@@ -8,21 +10,36 @@ import RoomServerMessages from "./messages/roomMessages.js";
 import TimerServerMessages from "./messages/timerMessages.js";
 const port = process.env.PORT ?? 3000;
 
+// create the server
 const app = express();
 const server = createServer(app);
 const io = new Server(server);
 
+// middleware to serve the static files
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const rootPath = path.resolve(__dirname, "../../../../");
+app.use(express.static(path.join(rootPath, "client/dist")));
+
+// save the rooms in memory (bad implementation, they stay in memory despite the room being empty)
 const rooms: string[] = [];
 
+// serve the client build
+app.get("/", (req, res) => {
+  res.sendFile(path.join(rootPath, "client/dist/index.html"));
+});
+
+// debug endpoint
 app.get("/rooms", (req, res) => {
   const roomsUsers = rooms.map((room) => {
     const users = Array.from(io.sockets.adapter.rooms.get(room));
     return { room, users };
   });
-  console.log(roomsUsers);
+  debug(roomsUsers);
   res.json(roomsUsers);
 });
 
+// socket.io connection
 io.on("connection", (socket) => {
   debug(`socket ${socket.id} connected`);
 
@@ -62,6 +79,7 @@ io.on("connection", (socket) => {
   });
 });
 
+// server listening in port PORT or 3000
 server.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
 });
