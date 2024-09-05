@@ -6,8 +6,10 @@ import {
   joinRoomMessage,
   roomCreatedMessage,
   roomJoinedMessage,
+  updatedTimerMessage,
   userJoinedMessage,
 } from "../../../types/messages.js";
+import TimerServerMessages from "./timerMessages.js";
 
 export default class RoomServerMessages {
   // Server creates the room, join the rooms owner and sends a message to him
@@ -39,17 +41,25 @@ export default class RoomServerMessages {
     };
     debug(roomMessage);
 
+    TimerServerMessages.getTimer(socket, room);
+
     socket.emit("room-joined", roomMessage);
     socket.to(room).emit("user-joined", socket.id);
   }
 
   // desconnect a user from a room and notify the rest of the users in the room
-  static userDisconnect(socket: Socket, room: string, users: Set<string>) {
+  static userDisconnect(
+    socket: Socket,
+    room: string,
+    users: Set<string>,
+  ): boolean {
     debug(`User ${socket.id} from room ${room} disconnected`);
 
     if (users) {
       users.delete(socket.id);
       socket.to(room).emit("user-disconnected", socket.id);
     }
+
+    return !users || users.size === 0;
   }
 }

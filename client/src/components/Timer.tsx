@@ -4,7 +4,7 @@ import { TimerContext, TimerContextType } from "../contexts/timer";
 import PlayIcon from "./icons/playIcon";
 import PauseIcon from "./icons/pauseIcon";
 import { WsContext, WsContextType } from "../contexts/ws";
-import { updatedTimerMessage } from "../../../types/messages";
+import { getTimerMessage, updatedTimer } from "../../../types/messages";
 
 function Timer() {
   const { isPaused, setIsPaused, timerState, timerClasses } = useContext(
@@ -16,22 +16,17 @@ function Timer() {
 
   const [lastEmittedTime, setLastEmittedTime] = useState(0);
 
+  // Listen for timer-updated events from the server
   useEffect(() => {
     socket.on(
       "timer-updated",
-      ({
-        isPaused,
-        newMinutes,
-        newSeconds,
-        timerState,
-      }: updatedTimerMessage) => {
-        // Convertir tiempos a segundos para comparar
+      ({ isPaused, newMinutes, newSeconds, timerState }: updatedTimer) => {
         const currentClientTimeInSeconds = minutes * 60 + seconds;
         const newTimeInSeconds = newMinutes * 60 + newSeconds;
 
-        // Si el tiempo actual del cliente es mayor que el nuevo tiempo recibido
+        // Update client if the new time is greater than the current client time
         if (currentClientTimeInSeconds < newTimeInSeconds) {
-          // Emitir el tiempo actual del cliente solo si es mayor que el último tiempo emitido
+          // Update other users in room if the new time is greater than the last emitted time
           if (currentClientTimeInSeconds > lastEmittedTime) {
             socket.emit("timer-updated", {
               isPaused: isPaused,
@@ -42,7 +37,7 @@ function Timer() {
             setLastEmittedTime(currentClientTimeInSeconds);
           }
         } else {
-          // Actualizar el estado del cliente con el tiempo nuevo recibido
+          // Update client if the new time is greater than the current client time
           setIsPaused(isPaused);
           setMinutes(newMinutes);
           setSeconds(newSeconds);
@@ -55,7 +50,41 @@ function Timer() {
     return () => {
       socket.off("timer-updated");
     };
-  }, [socket, minutes, seconds, lastEmittedTime]);
+  }, [
+    socket,
+    minutes,
+    seconds,
+    lastEmittedTime,
+    setIsPaused,
+    setMinutes,
+    setSeconds,
+    setTimerState,
+  ]);
+
+  // Send the current timer state to new users when they join
+  useEffect(() => {
+    const handleGetTimer = (receiver: getTimerMessage) => {
+      // Pause the timer if is not paused when new user joins
+      setIsPaused(isPaused ? isPaused : !isPaused);
+
+      const roomCurrentState: updatedTimer = {
+        room: receiver,
+        isPaused: !isPaused,
+        newMinutes: minutes,
+        newSeconds: seconds,
+        timerState: timerState,
+      };
+
+      // Send the current timer state to the new user
+      socket.emit("timer-updated", roomCurrentState);
+    };
+
+    socket.on("get-timer", handleGetTimer);
+
+    return () => {
+      socket.off("get-timer", handleGetTimer);
+    };
+  }, [isPaused, minutes, seconds, setIsPaused, socket, timerState]);
 
   return (
     <section

@@ -3,9 +3,12 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { Server } from "socket.io";
 import { createServer } from "node:http";
-import RoomsController from "./messages/roomMessages.js";
 import debug from "./utils/debug.js";
-import { joinRoomMessage, updatedTimerMessage } from "../../types/messages.js";
+import {
+  joinRoomMessage,
+  receiveTimerMessage,
+  updatedTimerMessage,
+} from "../../types/messages.js";
 import RoomServerMessages from "./messages/roomMessages.js";
 import TimerServerMessages from "./messages/timerMessages.js";
 const port = process.env.PORT ?? 3000;
@@ -21,8 +24,8 @@ const __dirname = path.dirname(__filename);
 const rootPath = path.resolve(__dirname, "dist/../../../");
 app.use(express.static(path.join(rootPath, "client/")));
 
-// save the rooms in memory (bad implementation, they stay in memory despite the room being empty)
-const rooms: string[] = [];
+// save the rooms in memory
+let rooms: Set<string> = new Set();
 
 // serve the client build
 app.get("/", (req, res) => {
@@ -31,10 +34,11 @@ app.get("/", (req, res) => {
 
 // debug endpoint
 app.get("/rooms", (req, res) => {
-  const roomsUsers = rooms.map((room) => {
+  const roomsUsers = [];
+  for (const room of rooms) {
     const users = Array.from(io.sockets.adapter.rooms.get(room));
-    return { room, users };
-  });
+    roomsUsers.push({ room, users });
+  }
   debug(roomsUsers);
   res.json(roomsUsers);
 });
@@ -46,7 +50,7 @@ io.on("connection", (socket) => {
   // room messages
   socket.on("create-room", () => {
     const newRoom = RoomServerMessages.createRoom(socket);
-    rooms.push(newRoom);
+    rooms.add(newRoom);
   });
 
   socket.on("join-room", (room: joinRoomMessage) =>
@@ -66,15 +70,17 @@ io.on("connection", (socket) => {
     // we must use async here because the socket.rooms will be empty
     // if we don't wait enough, so async + copy the socket rooms
     // to be able to communicate with the rest of the users of the room
-    const rooms = new Set(socket.rooms);
+    const userRooms = new Set(socket.rooms);
 
-    for (const room of rooms) {
+    for (const room of userRooms) {
       if (room === socket.id) continue;
-      RoomServerMessages.userDisconnect(
+      const emptyRoom = RoomServerMessages.userDisconnect(
         socket,
         room,
         io.sockets.adapter.rooms.get(room),
       );
+
+      if (emptyRoom) rooms.delete(room);
     }
   });
 });

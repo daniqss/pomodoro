@@ -14,21 +14,21 @@ function useTimer() {
     setTimerState,
   } = useContext(TimerContext) as TimerContextType;
 
-  function setNextTimerState() {
-    if (timerState === "focus") {
-      setTimerState("shortBreak");
-    } else if (timerState === "shortBreak") {
-      setTimerState("longBreak");
-    } else {
-      setTimerState("focus");
+  useEffect(() => {
+    function setNextTimerState() {
+      if (timerState === "focus") {
+        setTimerState("shortBreak");
+      } else if (timerState === "shortBreak") {
+        setTimerState("longBreak");
+      } else {
+        setTimerState("focus");
+      }
+
+      setSeconds(initialTimes[timerState].seconds);
+      setMinutes(initialTimes[timerState].minutes);
+      setIsPaused(true);
     }
 
-    setSeconds(initialTimes[timerState].seconds);
-    setMinutes(initialTimes[timerState].minutes);
-    setIsPaused(true);
-  }
-
-  useEffect(() => {
     if (isPaused) {
       return;
     }
@@ -49,7 +49,17 @@ function useTimer() {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [minutes, seconds, isPaused]);
+  }, [
+    minutes,
+    seconds,
+    isPaused,
+    setSeconds,
+    setTimerState,
+    setMinutes,
+    timerState,
+    initialTimes,
+    setIsPaused,
+  ]);
 
   return {
     minutes,

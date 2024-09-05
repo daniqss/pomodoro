@@ -19,15 +19,12 @@ function ConnectionMenu({ setIsConnected, setUsers }: ConnectionMenuProps) {
           className="bg-white rounded-lg text-zinc-950 p-2 shadow-lg min-h-4 m-auto mt-5"
           onClick={(e) => {
             e.preventDefault();
-            console.log(`Joining room ${joinValue}`);
             socket.emit("join-room", joinValue);
             socket.on("room-joined", (roomData: roomJoinedMessage) => {
               if (typeof roomData === "string") {
                 console.error(`Error joining room: ${roomData}`);
                 return;
               }
-              console.log(`Room joined:`, roomData);
-              console.log(`Room joined:`, roomData.room);
 
               setRoom(roomData.room);
               console.log(`Room joined:`, roomData.users);
