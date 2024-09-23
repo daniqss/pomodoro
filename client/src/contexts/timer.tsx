@@ -36,6 +36,9 @@ export type TimerContextType = {
   setIsPaused: Dispatch<SetStateAction<boolean>>;
   timerState: TimerState;
   setTimerState: Dispatch<SetStateAction<TimerState>>;
+  focusStrikes: number;
+  setFocusStrikes: Dispatch<SetStateAction<number>>;
+  strikesAfterLongBreak: number;
 };
 
 const TimerContext = createContext<TimerContextType | null>(null);
@@ -80,6 +83,8 @@ function TimerProvider({ children }: { children: ReactNode }) {
   );
   const [isPaused, setIsPaused] = useState(true);
   const [timerState, setTimerState] = useState<TimerState>("focus");
+  const [focusStrikes, setFocusStrikes] = useState(0);
+  const strikesAfterLongBreak = IS_DEV ? 2 : 4;
 
   return (
     <TimerContext.Provider
@@ -94,6 +99,9 @@ function TimerProvider({ children }: { children: ReactNode }) {
         setIsPaused,
         timerState,
         setTimerState,
+        focusStrikes,
+        setFocusStrikes,
+        strikesAfterLongBreak,
       }}
     >
       {children}

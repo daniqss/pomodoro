@@ -7,9 +7,8 @@ import { WsContext, WsContextType } from "../contexts/ws";
 import { getTimerMessage, updatedTimer } from "../../../types/messages";
 
 function Timer() {
-  const { isPaused, setIsPaused, timerState, timerClasses } = useContext(
-    TimerContext,
-  ) as TimerContextType;
+  const { isPaused, setIsPaused, timerState, timerClasses, focusStrikes } =
+    useContext(TimerContext) as TimerContextType;
   const { socket, room } = useContext(WsContext) as WsContextType;
   const { minutes, seconds, setMinutes, setSeconds, setTimerState } =
     useTimer();
@@ -138,6 +137,7 @@ function Timer() {
           )}
         </div>
       </button>
+      <p className="mt-3 font-semibold">{focusStrikes}</p>
     </section>
   );
 }

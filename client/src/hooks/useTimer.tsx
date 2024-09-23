@@ -12,18 +12,34 @@ function useTimer() {
     setIsPaused,
     timerState,
     setTimerState,
+    focusStrikes,
+    setFocusStrikes,
+    strikesAfterLongBreak,
   } = useContext(TimerContext) as TimerContextType;
 
   useEffect(() => {
     function setNextTimerState() {
       if (timerState === "focus") {
-        setTimerState("shortBreak");
-      } else if (timerState === "shortBreak") {
-        setTimerState("longBreak");
+        // Increment focusStrikes and check if it's time for a long break
+        setFocusStrikes((prev) => {
+          const updatedFocusStrikes = prev + 1;
+
+          // Check if it's time for a long break
+          if (updatedFocusStrikes % strikesAfterLongBreak === 0) {
+            setTimerState("longBreak");
+          } else {
+            // Otherwise, it's time for a short break
+            setTimerState("shortBreak");
+          }
+
+          return updatedFocusStrikes;
+        });
       } else {
+        // If the timer state is a break, go back to focus
         setTimerState("focus");
       }
 
+      // TODO: Doesn't work correctly xd
       setSeconds(initialTimes[timerState].seconds);
       setMinutes(initialTimes[timerState].minutes);
       setIsPaused(true);
@@ -59,6 +75,9 @@ function useTimer() {
     timerState,
     initialTimes,
     setIsPaused,
+    focusStrikes,
+    setFocusStrikes,
+    strikesAfterLongBreak,
   ]);
 
   return {
