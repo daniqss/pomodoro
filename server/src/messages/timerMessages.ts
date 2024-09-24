@@ -2,12 +2,12 @@ import { Socket } from "socket.io";
 import {
   getTimerMessage,
   receiveTimerMessage,
-  updatedTimer,
+  updatedTimerMessage,
 } from "../../../types/messages.js";
 import { debug } from "console";
 
 class TimerServerMessages {
-  static timerUpdated(socket: Socket, updatedTimer: updatedTimer) {
+  static timerUpdated(socket: Socket, updatedTimer: updatedTimerMessage) {
     debug(updatedTimer);
     socket.to(updatedTimer.room).emit("timer-updated", updatedTimer);
   }
