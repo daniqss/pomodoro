@@ -98,7 +98,7 @@ function Timer() {
             ? "Short Break"
             : "Long Break"}
       </h2>
-      <p className="text-8xl font-bold text-zinc-800">
+      <p className="text-8xl font-bold text-zinc-800 font-mono">
         {minutes < 10 ? `0${minutes}` : minutes}:
         {seconds < 10 ? `0${seconds}` : seconds}
       </p>
@@ -137,7 +137,7 @@ function Timer() {
           )}
         </div>
       </button>
-      <p className="mt-3 font-semibold">{focusStrikes}</p>
+      <p className="mt-3 font-semibold font-mono">{`#${focusStrikes}`}</p>
     </section>
   );
 }
