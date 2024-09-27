@@ -4,7 +4,7 @@ import { TimerContext, TimerContextType } from "../contexts/timer";
 import PlayIcon from "./icons/playIcon";
 import PauseIcon from "./icons/pauseIcon";
 import { WsContext, WsContextType } from "../contexts/ws";
-import { getTimerMessage, updatedTimer } from "../../../types/messages";
+import { getTimerMessage, updatedTimerMessage } from "../../../types/messages";
 
 function Timer() {
   const { isPaused, setIsPaused, timerState, timerClasses, focusStrikes } =
@@ -19,7 +19,12 @@ function Timer() {
   useEffect(() => {
     socket.on(
       "timer-updated",
-      ({ isPaused, newMinutes, newSeconds, timerState }: updatedTimer) => {
+      ({
+        isPaused,
+        newMinutes,
+        newSeconds,
+        timerState,
+      }: updatedTimerMessage) => {
         const currentClientTimeInSeconds = minutes * 60 + seconds;
         const newTimeInSeconds = newMinutes * 60 + newSeconds;
 
@@ -66,9 +71,9 @@ function Timer() {
       // Pause the timer if is not paused when new user joins
       setIsPaused(isPaused ? isPaused : !isPaused);
 
-      const roomCurrentState: updatedTimer = {
+      const roomCurrentState: updatedTimerMessage = {
         room: receiver,
-        isPaused: !isPaused,
+        isPaused: isPaused,
         newMinutes: minutes,
         newSeconds: seconds,
         timerState: timerState,
