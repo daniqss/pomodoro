@@ -12,21 +12,35 @@ function useTimer() {
     setIsPaused,
     timerState,
     setTimerState,
+    focusStrikes,
+    setFocusStrikes,
+    strikesAfterLongBreak,
   } = useContext(TimerContext) as TimerContextType;
 
   useEffect(() => {
     function setNextTimerState() {
-      if (timerState === "focus") {
-        setTimerState("shortBreak");
-      } else if (timerState === "shortBreak") {
-        setTimerState("longBreak");
-      } else {
-        setTimerState("focus");
-      }
+      const currentTimerState = timerState;
 
-      setSeconds(initialTimes[timerState].seconds);
-      setMinutes(initialTimes[timerState].minutes);
-      setIsPaused(true);
+      setFocusStrikes((prev) => {
+        // Update timer according to the focus strikes
+        const nextTimerState =
+          currentTimerState === "focus"
+            ? prev % strikesAfterLongBreak === 1
+              ? "longBreak"
+              : "shortBreak"
+            : "focus";
+
+        setTimerState(nextTimerState);
+
+        // Update times according to the next timer state
+        const nextTime = initialTimes[nextTimerState];
+        setSeconds(nextTime.seconds);
+        setMinutes(nextTime.minutes);
+        setIsPaused(true);
+
+        // Update focus strikes if the timerState is focus
+        return nextTimerState === "focus" ? prev : prev + 1;
+      });
     }
 
     if (isPaused) {
@@ -59,6 +73,9 @@ function useTimer() {
     timerState,
     initialTimes,
     setIsPaused,
+    focusStrikes,
+    setFocusStrikes,
+    strikesAfterLongBreak,
   ]);
 
   return {

@@ -4,12 +4,11 @@ import { TimerContext, TimerContextType } from "../contexts/timer";
 import PlayIcon from "./icons/playIcon";
 import PauseIcon from "./icons/pauseIcon";
 import { WsContext, WsContextType } from "../contexts/ws";
-import { getTimerMessage, updatedTimer } from "../../../types/messages";
+import { getTimerMessage, updatedTimerMessage } from "../../../types/messages";
 
 function Timer() {
-  const { isPaused, setIsPaused, timerState, timerClasses } = useContext(
-    TimerContext,
-  ) as TimerContextType;
+  const { isPaused, setIsPaused, timerState, timerClasses, focusStrikes } =
+    useContext(TimerContext) as TimerContextType;
   const { socket, room } = useContext(WsContext) as WsContextType;
   const { minutes, seconds, setMinutes, setSeconds, setTimerState } =
     useTimer();
@@ -20,7 +19,12 @@ function Timer() {
   useEffect(() => {
     socket.on(
       "timer-updated",
-      ({ isPaused, newMinutes, newSeconds, timerState }: updatedTimer) => {
+      ({
+        isPaused,
+        newMinutes,
+        newSeconds,
+        timerState,
+      }: updatedTimerMessage) => {
         const currentClientTimeInSeconds = minutes * 60 + seconds;
         const newTimeInSeconds = newMinutes * 60 + newSeconds;
 
@@ -67,9 +71,9 @@ function Timer() {
       // Pause the timer if is not paused when new user joins
       setIsPaused(isPaused ? isPaused : !isPaused);
 
-      const roomCurrentState: updatedTimer = {
+      const roomCurrentState: updatedTimerMessage = {
         room: receiver,
-        isPaused: !isPaused,
+        isPaused: isPaused,
         newMinutes: minutes,
         newSeconds: seconds,
         timerState: timerState,
@@ -99,7 +103,7 @@ function Timer() {
             ? "Short Break"
             : "Long Break"}
       </h2>
-      <p className="text-8xl font-bold text-zinc-800">
+      <p className="text-8xl font-bold text-zinc-800 font-mono">
         {minutes < 10 ? `0${minutes}` : minutes}:
         {seconds < 10 ? `0${seconds}` : seconds}
       </p>
@@ -138,6 +142,7 @@ function Timer() {
           )}
         </div>
       </button>
+      <p className="mt-3 font-semibold font-mono">{`#${focusStrikes}`}</p>
     </section>
   );
 }

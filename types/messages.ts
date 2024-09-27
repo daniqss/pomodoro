@@ -11,9 +11,9 @@ export type roomJoinedMessage = joinSuccefullyMessage | string;
 export type userJoinedMessage = string;
 
 export type getTimerMessage = string;
-export type receiveTimerMessage = updatedTimer;
+export type receiveTimerMessage = updatedTimerMessage;
 
-export type updatedTimer = {
+export type updatedTimerMessage = {
   room: string;
   isPaused: boolean;
   newMinutes: number;
