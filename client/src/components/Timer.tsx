@@ -92,7 +92,7 @@ function Timer() {
 
   return (
     <section
-      className={`${timerClasses.lightBg[timerState]} mx-60 text-gray-800 p-4 text-center rounded`}
+      className={`${timerClasses.lightBg[timerState]} p-4 text-center rounded`}
     >
       <h2
         className={`text-2xl font-bold ${timerClasses.darkBg[timerState]} mb-6 inline-block px-2 py-1 rounded shadow-md`}
@@ -103,7 +103,7 @@ function Timer() {
             ? "Short Break"
             : "Long Break"}
       </h2>
-      <p className="text-8xl font-bold text-zinc-800 font-mono">
+      <p className="text-8xl font-bold font-mono">
         {minutes < 10 ? `0${minutes}` : minutes}:
         {seconds < 10 ? `0${seconds}` : seconds}
       </p>
