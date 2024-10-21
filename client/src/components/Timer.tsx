@@ -92,7 +92,7 @@ function Timer() {
 
   return (
     <section
-      className={`${timerClasses.lightBg[timerState]} mx-60 text-gray-800 p-4 text-center rounded`}
+      className={`w-full ${timerClasses.lightBg[timerState]} text-gray-800 p-4 text-center rounded`}
     >
       <h2
         className={`text-2xl font-bold ${timerClasses.darkBg[timerState]} mb-6 inline-block px-2 py-1 rounded shadow-md`}

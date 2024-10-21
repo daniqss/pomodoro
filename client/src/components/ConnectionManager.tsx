@@ -33,7 +33,7 @@ function ConnectionManager() {
   });
 
   return (
-    <section>
+    <section className="lg:mx-60 lg:mt-12 mt-4">
       {!isConnected ? (
         <ConnectionMenu setIsConnected={setIsConnected} setUsers={setUsers} />
       ) : (

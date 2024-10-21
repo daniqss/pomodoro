@@ -12,7 +12,7 @@ function ConnectionMenu({ setIsConnected, setUsers }: ConnectionMenuProps) {
   const [joinValue, setJoinValue] = useState("");
 
   return (
-    <section className="flex flex-col justify-between items-center mx-60 mt-12 text-gray-800 text-center rounded">
+    <section className="flex flex-col justify-between items-center text-gray-800 text-center rounded">
       <h3 className="text-white text-lg">Join your friends' room</h3>
       <form className="rounded flex flex-row">
         <button

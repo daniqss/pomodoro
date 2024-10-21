@@ -5,8 +5,8 @@ import ConnectionManager from "./components/ConnectionManager";
 function App() {
   return (
     <>
-      <main className="lg:mx-12">
-        <Header />
+      <Header>Pomodoro!</Header>
+      <main className="lg:mx-60 mx-2 relative">
         <Timer />
         <ConnectionManager />
       </main>
