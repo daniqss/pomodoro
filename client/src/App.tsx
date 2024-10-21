@@ -6,7 +6,7 @@ function App() {
   return (
     <>
       <Header>Pomodoro!</Header>
-      <main className="lg:mx-60 mx-2 relative">
+      <main className="mx-6 sm:mx-40 md:mx-60 lg:mx-72 relative">
         <Timer />
         <ConnectionManager />
       </main>
