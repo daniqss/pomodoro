@@ -5,7 +5,7 @@ import ConnectionManager from "./components/ConnectionManager";
 function App() {
   return (
     <>
-      <main className="mx-12">
+      <main className="lg:mx-12">
         <Header />
         <Timer />
         <ConnectionManager />
