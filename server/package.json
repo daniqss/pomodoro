@@ -6,9 +6,9 @@
     "uuid": "^10.0.0"
   },
   "scripts": {
-    "build": "tsc --watch",
+    "build": "tsc --outDir ../dist/ && cp -r package.json ../dist/server",
     "start": "PORT=3000 NODE_ENV=development node --watch dist/server/src/index.js",
-    "dev": "concurrently \"npm run build\" \"npm run start\"",
+    "dev": "concurrently \"tsc --watch\" \"npm run start\"",
     "test": "tsc && NODE_ENV=development mocha --reporter spec dist/**/*.test.js"
   },
   "devDependencies": {

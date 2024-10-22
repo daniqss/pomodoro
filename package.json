@@ -1,0 +1,30 @@
+{
+  "name": "pomodoro",
+  "version": "1.0.0",
+  "description": "A simple pomodoro to stay focus in company, powered by SocketIO",
+  "main": "dist/server/index.js",
+  "scripts": {
+    "build": "cd client && npm run build && cd ../server && npm run build && cd ../dist/server && npm install --omit=dev",
+    "start": "npm run build && PORT=3000 node dist/server/src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/daniqss/pomodoro.git"
+  },
+  "keywords": [
+    "socketIO",
+    "pomodoro",
+    "typescript",
+    "node",
+    "express",
+    "react",
+    "vite",
+    "tailwind"
+  ],
+  "author": "daniqss",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/daniqss/pomodoro/issues"
+  },
+  "homepage": "https://github.com/daniqss/pomodoro#readme"
+}

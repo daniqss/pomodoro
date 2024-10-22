@@ -103,6 +103,7 @@ function Timer() {
             ? "Short Break"
             : "Long Break"}
       </h2>
+
       <p className="text-6xl sm:text-6xl md:text-7xl lg:text-8xl font-bold text-zinc-800 font-mono">
         {minutes < 10 ? `0${minutes}` : minutes}:
         {seconds < 10 ? `0${seconds}` : seconds}
