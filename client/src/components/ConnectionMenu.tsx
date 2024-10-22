@@ -12,11 +12,11 @@ function ConnectionMenu({ setIsConnected, setUsers }: ConnectionMenuProps) {
   const [joinValue, setJoinValue] = useState("");
 
   return (
-    <section className="flex flex-col justify-between items-center mx-60 mt-12 text-gray-800 text-center rounded">
+    <section className="flex flex-col text-gray-800 text-center whitespace-nowrap rounded">
       <h3 className="text-white text-lg">Join your friends' room</h3>
-      <form className="rounded flex flex-row">
+      <form className="rounded flex flex-row justify-between min-h-4 m-auto max-w-2xl my-2">
         <button
-          className="bg-white rounded-lg text-zinc-950 p-2 shadow-lg min-h-4 m-auto mt-5"
+          className="bg-white rounded-lg text-zinc-950 shadow-lg m-auto p-2 lg:m-2"
           onClick={(e) => {
             e.preventDefault();
             socket.emit("join-room", joinValue);
@@ -52,12 +52,12 @@ function ConnectionMenu({ setIsConnected, setUsers }: ConnectionMenuProps) {
             setJoinValue(e.target.value);
           }}
           placeholder="Room's code"
-          className="p-2 shadow-lg bg-white rounded-lg min-h-4 md:m-5 m-2"
+          className="shadow-lg bg-white rounded-lg min-h-4 m-auto p-2 flex-grow mx-2"
         />
       </form>
       <h3 className="text-white text-lg">Or</h3>
       <button
-        className="bg-white rounded-lg text-zinc-950 p-2 shadow-lg min-h-4 m-auto mt-5"
+        className="bg-white rounded-lg text-zinc-950 p-2 shadow-lg min-h-4 m-auto my-2"
         onClick={() => {
           console.log("Creating room");
           socket.emit("create-room");

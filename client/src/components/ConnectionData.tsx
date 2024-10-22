@@ -6,7 +6,7 @@ function ConnectionData({ users }: { users: string[] }) {
   const { room } = useContext(WsContext) as WsContextType & { room: string };
 
   return (
-    <section className="mx-60 mt-12 text-gray-800 text-center rounded">
+    <section className="text-gray-800 text-center rounded">
       <h3 className="text-white text-3xl">Connected successfully!</h3>
       <p className="text-white text-lg">
         Share this room name with your partners to start working!

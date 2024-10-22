@@ -6,8 +6,8 @@ import TodoList from "./components/TodoList";
 function App() {
   return (
     <>
-      <Header />
-      <main className="mx-72 text-zinc-800">
+      <Header>Pomodoro!</Header>
+      <main className="mx-6 sm:mx-40 md:mx-60 lg:mx-72 relative">
         <Timer />
         <ConnectionManager />
         <TodoList />
