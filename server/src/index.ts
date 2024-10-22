@@ -11,7 +11,8 @@ import {
 } from "../../types/messages.js";
 import RoomServerMessages from "./messages/roomMessages.js";
 import TimerServerMessages from "./messages/timerMessages.js";
-const port = process.env.PORT ?? 3000;
+const PORT = process.env.PORT ?? 3000;
+const PATH = process.env.PATH ?? "localhost";
 
 // create the server
 const app = express();
@@ -85,7 +86,7 @@ io.on("connection", (socket) => {
   });
 });
 
-// server listening in port PORT or 3000
-server.listen(port, () => {
-  console.log(`Server running on http://localhost:${port}`);
+// server listening in PORT or 3000
+server.listen(PORT, () => {
+  console.log(`Server running on http://${PATH}:${PORT}`);
 });

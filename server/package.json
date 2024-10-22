@@ -7,7 +7,7 @@
   },
   "scripts": {
     "build": "tsc --outDir ../dist/ && cp -r package.json ../dist/server",
-    "start": "PORT=3000 NODE_ENV=development node --watch dist/server/src/index.js",
+    "start": "NODE_ENV=development node --watch dist/server/src/index.js",
     "dev": "concurrently \"tsc --watch\" \"npm run start\"",
     "test": "tsc && NODE_ENV=development mocha --reporter spec dist/**/*.test.js"
   },

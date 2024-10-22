@@ -4,8 +4,9 @@
   "description": "A simple pomodoro to stay focus in company, powered by SocketIO",
   "main": "dist/server/index.js",
   "scripts": {
+    "install": "cd client && npm install && cd ../server && npm install",
     "build": "cd client && npm run build && cd ../server && npm run build && cd ../dist/server && npm install --omit=dev",
-    "start": "npm run build && PORT=3000 node dist/server/src/index.js"
+    "start": "node dist/server/src/index.js"
   },
   "repository": {
     "type": "git",
