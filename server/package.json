@@ -8,7 +8,7 @@
   "scripts": {
     "build": "tsc --outDir ../dist/ && cp -r package.json ../dist/server",
     "start": "NODE_ENV=development node --watch dist/server/src/index.js",
-    "dev": "concurrently \"tsc --watch\" \"npm run start\"",
+    "dev": "concurrently \"tsc --watch\" \"pnpm run start\"",
     "test": "tsc && NODE_ENV=development mocha --reporter spec dist/**/*.test.js"
   },
   "devDependencies": {

@@ -12,7 +12,7 @@ import {
 import RoomServerMessages from "./messages/roomMessages.js";
 import TimerServerMessages from "./messages/timerMessages.js";
 const PORT = process.env.PORT ?? 3000;
-const PATH = process.env.PATH ?? "localhost";
+const HOST_ADDRESS = process.env.HOST_ADDRESS ?? "localhost";
 
 // create the server
 const app = express();
@@ -88,5 +88,5 @@ io.on("connection", (socket) => {
 
 // server listening in PORT or 3000
 server.listen(PORT, () => {
-  console.log(`Server running on http://${PATH}:${PORT}`);
+  console.log(`Server running on http://${HOST_ADDRESS}:${PORT}`);
 });
