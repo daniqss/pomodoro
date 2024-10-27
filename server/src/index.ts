@@ -19,22 +19,16 @@ const app = express();
 const server = createServer(app);
 const io = new Server(server);
 
-// middleware to serve the static files
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const rootPath = path.resolve(__dirname, "dist/../../../");
-app.use(express.static(path.join(rootPath, "client/")));
-
 // save the rooms in memory
 let rooms: Set<string> = new Set();
 
-// serve the client build
-app.get("/", (req, res) => {
-  res.sendFile(path.join(rootPath, "client/index.html"));
-});
-
 // debug endpoint
 app.get("/rooms", (req, res) => {
+  if (process.env.NODE_ENV !== "development") {
+    res.status(404).send("Not found");
+    return;
+  }
+
   const roomsUsers = [];
   for (const room of rooms) {
     const users = Array.from(io.sockets.adapter.rooms.get(room));

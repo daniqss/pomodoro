@@ -6,10 +6,9 @@
     "uuid": "^10.0.0"
   },
   "scripts": {
-    "build": "tsc --outDir ../dist/ && cp -r package.json ../dist/server",
-    "start": "NODE_ENV=development node --watch dist/server/src/index.js",
-    "dev": "concurrently \"tsc --watch\" \"pnpm run start\"",
-    "test": "tsc && NODE_ENV=development mocha --reporter spec dist/**/*.test.js"
+    "build": "tsc",
+    "start": "node dist/server/src/index.js",
+    "dev": "concurrently \"tsc --watch\" \"NODE_ENV=development node --watch dist/server/src/index.js\""
   },
   "devDependencies": {
     "@types/chai": "^4.3.17",
