@@ -6,7 +6,7 @@
     "uuid": "^10.0.0"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "tsc --project ./",
     "start": "node dist/server/src/index.js",
     "dev": "concurrently \"tsc --watch\" \"NODE_ENV=development node --watch dist/server/src/index.js\""
   },

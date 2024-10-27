@@ -12,10 +12,9 @@ cd ../server && npm install && npm run dev
 ```
 
 ### Production
-It will be running be default on port 3000, and it can be set with the environment variable PORT.
-Client build will be served by the server as static files.
 ```bash
-npm run build
-npm run start
+docker build -f server/Dockerfile -t pomodoro-server .
+# docker build -f client/Dockerfile -t pomodoro-client .
+docker run -d -p 3000:3000 pomodoro-server
+# docker run -d -p 5173:80 pomodoro-client
 ```
-
