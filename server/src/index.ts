@@ -13,10 +13,7 @@ import cors from "cors";
 const app = express();
 app.use(cors({ origin: "*" }));
 const server = createServer(app);
-const io = new Server(server, {
-  cors: { origin: "*" },
-  transports: ["websocket"],
-});
+const io = new Server(server, { cors: { origin: "*" } });
 
 // save the rooms in memory
 let rooms: Set<string> = new Set();

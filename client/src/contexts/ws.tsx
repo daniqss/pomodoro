@@ -19,11 +19,7 @@ fetch("http://localhost:3000/rooms")
   .then(console.log);
 
 const WsContext = createContext<WsContextType | null>(null);
-const socket = io("/", {
-  autoConnect: false,
-  transports: ["websocket"],
-});
-socket.connect();
+const socket = io("/");
 
 function WsProvider({ children }: { children: ReactNode }) {
   const [room, setRoom] = useState<string | null>(null);
