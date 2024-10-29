@@ -13,11 +13,29 @@ export type WsContextType = {
   socket: SocketIOClient.Socket;
 };
 
+// ns q esta pasando
+fetch("http://localhost:3000/rooms")
+  .then((res) => res.json())
+  .then(console.log);
+
 const WsContext = createContext<WsContextType | null>(null);
-const socket = io("/");
+const socket = io("/", {
+  autoConnect: false,
+  transports: ["websocket"],
+});
+socket.connect();
 
 function WsProvider({ children }: { children: ReactNode }) {
   const [room, setRoom] = useState<string | null>(null);
+
+  // useEffect(() => {
+  //   socket.connect();
+
+  //   return () => {
+  //     if (socket.connected) socket.disconnect();
+  //     else socket.connect();
+  //   };
+  // }, [socket]);
 
   return (
     <WsContext.Provider

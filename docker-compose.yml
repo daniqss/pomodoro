@@ -1,0 +1,19 @@
+services:
+  client:
+    image: pomodoro-client
+    stdin_open: true
+    ports: 
+      - "80:80"
+    depends_on:
+      - server
+    networks:
+      - pomodoro
+  server:
+    image: pomodoro-server
+    ports:
+      - "3000:3000"
+    networks:
+      - pomodoro
+networks:
+  pomodoro:
+    driver: bridge

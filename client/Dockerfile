@@ -11,6 +11,7 @@ RUN pnpm install
 RUN pnpm build
 
 FROM nginx:stable-alpine
+COPY  --from=build /pomodoro/client/nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=build /pomodoro/client/dist/client /usr/share/nginx/html
 
 EXPOSE 80
