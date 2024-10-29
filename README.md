@@ -5,17 +5,15 @@ A simple pomodoro to stay focus in company, powered by [SocketIO](https://socket
 
 ## How to run
 ### Development
-Web client will run on port 5173 and server on 3000
+Web client will run on port 5173 and server on 3000 by default
 ```bash
-cd client && npm install && npm run dev
-cd ../server && npm install && npm run dev 
+make install
+make dev
 ```
 
 ### Production
-It will be running be default on port 3000, and it can be set with the environment variable PORT.
-Client build will be served by the server as static files.
+Docker compose will up two containers, one for the client and another for the server. The client will run on port 80 and the server on 3000.
 ```bash
-npm run build
-npm run start
+make build
+make run
 ```
-

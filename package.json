@@ -2,11 +2,10 @@
   "name": "pomodoro",
   "version": "1.0.0",
   "description": "A simple pomodoro to stay focus in company, powered by SocketIO",
-  "main": "dist/server/index.js",
   "scripts": {
-    "install": "cd client && pnpm install && cd ../server && pnpm install",
-    "build": "cd client && pnpm run build && cd ../server && pnpm run build && cd ../dist/server && pnpm install -P",
-    "start": "node dist/server/src/index.js"
+    "install": "cd client && npm install && cd .. && cd server && npm install && cd ..",
+    "dev": "concurrently \"cd client && npm run dev\" \"cd server && npm run dev\"",
+    "start": "docker compose up"
   },
   "repository": {
     "type": "git",
@@ -27,5 +26,8 @@
   "bugs": {
     "url": "https://github.com/daniqss/pomodoro/issues"
   },
-  "homepage": "https://github.com/daniqss/pomodoro#readme"
+  "homepage": "https://github.com/daniqss/pomodoro#readme",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
 }

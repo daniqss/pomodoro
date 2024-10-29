@@ -1,40 +1,30 @@
 import express from "express";
-import path from "path";
-import { fileURLToPath } from "url";
 import { Server } from "socket.io";
 import { createServer } from "node:http";
 import debug from "./utils/debug.js";
-import {
-  joinRoomMessage,
-  receiveTimerMessage,
-  updatedTimerMessage,
-} from "../../types/messages.js";
+import { joinRoomMessage, updatedTimerMessage } from "../../types/messages.js";
 import RoomServerMessages from "./messages/roomMessages.js";
 import TimerServerMessages from "./messages/timerMessages.js";
 const PORT = process.env.PORT ?? 3000;
 const HOST_ADDRESS = process.env.HOST_ADDRESS ?? "localhost";
+import cors from "cors";
 
 // create the server
 const app = express();
+app.use(cors({ origin: "*" }));
 const server = createServer(app);
-const io = new Server(server);
-
-// middleware to serve the static files
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const rootPath = path.resolve(__dirname, "dist/../../../");
-app.use(express.static(path.join(rootPath, "client/")));
+const io = new Server(server, { cors: { origin: "*" } });
 
 // save the rooms in memory
 let rooms: Set<string> = new Set();
 
-// serve the client build
-app.get("/", (req, res) => {
-  res.sendFile(path.join(rootPath, "client/index.html"));
-});
-
 // debug endpoint
 app.get("/rooms", (req, res) => {
+  // if (process.env.NODE_ENV !== "development") {
+  //   res.status(404).send("Not found");
+  //   return;
+  // }
+
   const roomsUsers = [];
   for (const room of rooms) {
     const users = Array.from(io.sockets.adapter.rooms.get(room));
@@ -45,16 +35,16 @@ app.get("/rooms", (req, res) => {
 });
 
 // socket.io connection
-io.on("connection", (socket) => {
+io.on("connection", async (socket) => {
   debug(`socket ${socket.id} connected`);
 
   // room messages
-  socket.on("create-room", () => {
+  socket.on("create-room", async () => {
     const newRoom = RoomServerMessages.createRoom(socket);
     rooms.add(newRoom);
   });
 
-  socket.on("join-room", (room: joinRoomMessage) =>
+  socket.on("join-room", async (room: joinRoomMessage) =>
     RoomServerMessages.joinRoom(
       socket,
       room,
@@ -63,7 +53,7 @@ io.on("connection", (socket) => {
   );
 
   // timer messages
-  socket.on("timer-updated", (updatedTimer: updatedTimerMessage) =>
+  socket.on("timer-updated", async (updatedTimer: updatedTimerMessage) =>
     TimerServerMessages.timerUpdated(socket, updatedTimer),
   );
 
