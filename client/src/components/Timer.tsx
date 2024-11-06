@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import useTimer from "../hooks/useTimer";
 import { TimerContext, TimerContextType } from "../contexts/timer";
 import PlayIcon from "./icons/playIcon";
@@ -13,73 +13,43 @@ function Timer() {
   const { minutes, seconds, setMinutes, setSeconds, setTimerState } =
     useTimer();
 
-  const [lastEmittedTime, setLastEmittedTime] = useState(0);
-
   // Listen for timer-updated events from the server
   useEffect(() => {
-    socket.on(
-      "timer-updated",
-      ({
-        isPaused,
-        newMinutes,
-        newSeconds,
-        timerState,
-      }: updatedTimerMessage) => {
-        const currentClientTimeInSeconds = minutes * 60 + seconds;
-        const newTimeInSeconds = newMinutes * 60 + newSeconds;
-
-        // Update client if the new time is greater than the current client time
-        if (currentClientTimeInSeconds < newTimeInSeconds) {
-          // Update other users in room if the new time is greater than the last emitted time
-          if (currentClientTimeInSeconds > lastEmittedTime) {
-            socket.emit("timer-updated", {
-              isPaused: isPaused,
-              newMinutes: minutes,
-              newSeconds: seconds,
-              timerState: timerState,
-            });
-            setLastEmittedTime(currentClientTimeInSeconds);
-          }
-        } else {
-          // Update client if the new time is greater than the current client time
-          setIsPaused(isPaused);
-          setMinutes(newMinutes);
-          setSeconds(newSeconds);
-          setTimerState(timerState);
-        }
-      },
-    );
-
-    // Cleanup function to remove the event listener when the component is unmounted or socket changes
-    return () => {
-      socket.off("timer-updated");
+    const handleTimerUpdate = ({
+      isPaused: newIsPaused,
+      newMinutes,
+      newSeconds,
+      timerState: newTimerState,
+    }: updatedTimerMessage) => {
+      // update timer state
+      setIsPaused(newIsPaused);
+      setMinutes(newMinutes);
+      setSeconds(newSeconds);
+      setTimerState(newTimerState);
     };
-  }, [
-    socket,
-    minutes,
-    seconds,
-    lastEmittedTime,
-    setIsPaused,
-    setMinutes,
-    setSeconds,
-    setTimerState,
-  ]);
 
-  // Send the current timer state to new users when they join
+    socket.on("timer-updated", handleTimerUpdate);
+
+    return () => {
+      socket.off("timer-updated", handleTimerUpdate);
+    };
+  }, [socket, setIsPaused, setMinutes, setSeconds, setTimerState]);
+
+  // Handle new users joining and requesting timer state
   useEffect(() => {
     const handleGetTimer = (receiver: getTimerMessage) => {
-      // Pause the timer if is not paused when new user joins
-      setIsPaused(isPaused ? isPaused : !isPaused);
+      // pause when new user joins
+      setIsPaused(true);
 
       const roomCurrentState: updatedTimerMessage = {
         room: receiver,
-        isPaused: isPaused,
+        isPaused: true,
         newMinutes: minutes,
         newSeconds: seconds,
         timerState: timerState,
       };
 
-      // Send the current timer state to the new user
+      // send current timer state to new user
       socket.emit("timer-updated", roomCurrentState);
     };
 
@@ -88,7 +58,24 @@ function Timer() {
     return () => {
       socket.off("get-timer", handleGetTimer);
     };
-  }, [isPaused, minutes, seconds, setIsPaused, socket, timerState]);
+  }, [socket, minutes, seconds, timerState, setIsPaused]);
+
+  // update timer and send to server
+  const handleTimerToggle = () => {
+    const newPausedState = !isPaused;
+    setIsPaused(newPausedState);
+
+    const timerUpdate: updatedTimerMessage = {
+      room: room as string,
+      isPaused: newPausedState,
+      newMinutes: minutes,
+      newSeconds: seconds,
+      timerState: timerState,
+    };
+
+    console.log("Emitting timer update:", timerUpdate);
+    socket.emit("timer-updated", timerUpdate);
+  };
 
   return (
     <section
@@ -110,19 +97,7 @@ function Timer() {
       </p>
 
       <button
-        onClick={() => {
-          setIsPaused(!isPaused);
-          setMinutes(minutes);
-          setSeconds(seconds);
-          setTimerState(timerState);
-          socket.emit("timer-updated", {
-            room: room,
-            isPaused: !isPaused,
-            newMinutes: minutes,
-            newSeconds: seconds,
-            timerState: timerState,
-          });
-        }}
+        onClick={handleTimerToggle}
         className="bg-zinc-800 text-white p-2 rounded mt-4 shadow-lg hover:shadow-none"
       >
         <div className="flex flex-row justify-between p-2">
