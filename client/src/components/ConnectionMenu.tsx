@@ -63,38 +63,50 @@ function ConnectionMenu({ setIsConnected, setUsers }: ConnectionMenuProps) {
   };
 
   return (
-    <section className="flex flex-col text-gray-800 text-center whitespace-nowrap rounded">
-      <h3 className="text-white text-lg">Join your friends' room</h3>
-      <form
-        className="rounded flex flex-row justify-between min-h-4 m-auto max-w-2xl my-2"
-        onSubmit={handleJoinRoom}
-      >
+    <section className="bg-zinc-800 shadow-lg rounded-lg overflow-hidden">
+      <div className="px-6 py-8">
+        <h2 className="text-2xl font-bold text-center text-white mb-2">
+          Join or Create a Room
+        </h2>
+        <p className="text-center text-gray-400 mb-6">
+          Connect with your friends
+        </p>
+
+        <form onSubmit={handleJoinRoom} className="mb-6">
+          <input
+            type="text"
+            id="roomName"
+            value={joinValue}
+            onChange={(e) => setJoinValue(e.target.value)}
+            placeholder="Enter room code"
+            className="w-full px-4 py-2 bg-zinc-700 text-white border border-zinc-600 rounded-md focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent transition duration-150 ease-in-out placeholder-gray-400"
+          />
+          <button
+            type="submit"
+            className="w-full mt-4 bg-zinc-600 text-white py-2 px-4 rounded-md hover:bg-zinc-500 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 transition duration-150 ease-in-out"
+          >
+            Join Room
+          </button>
+        </form>
+
+        <div className="relative">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-zinc-600"></div>
+          </div>
+          <div className="relative flex justify-center text-sm">
+            <span className="px-2 bg-zinc-800 text-gray-400">Or</span>
+          </div>
+        </div>
+
         <button
-          type="submit"
-          className="bg-white rounded-lg text-zinc-950 shadow-lg m-auto p-2 lg:m-2"
+          className="w-full mt-6 bg-zinc-700 text-white py-2 px-4 rounded-md hover:bg-zinc-600 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 transition duration-150 ease-in-out"
+          onClick={() => {
+            socket.emit("create-room");
+          }}
         >
-          Join Room
+          Create New Room
         </button>
-        <input
-          type="text"
-          name="roomName"
-          id="roomName"
-          value={joinValue}
-          onChange={(e) => setJoinValue(e.target.value)}
-          placeholder="Room's code"
-          className="shadow-lg bg-white rounded-lg min-h-4 m-auto p-2 flex-grow mx-2"
-        />
-      </form>
-      <h3 className="text-white text-lg">Or</h3>
-      <button
-        className="bg-white rounded-lg text-zinc-950 p-2 shadow-lg min-h-4 m-auto my-2"
-        onClick={() => {
-          console.log("Creating room");
-          socket.emit("create-room");
-        }}
-      >
-        Create Room
-      </button>
+      </div>
     </section>
   );
 }
