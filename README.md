@@ -7,9 +7,12 @@ A simple pomodoro to stay focus in company, powered by [SocketIO](https://socket
 ### Development
 Web client will run on port 5173 and server on 3000 by default
 ```bash
-make install
-make dev
+pnpm install
+pnpm dev
 ```
+#### dependencies
+- nodejs
+- pnpm
 
 ### Production
 Docker compose will up two containers, one for the client and another for the server. The client will run on port 80 and the server on 3000.
@@ -17,3 +20,7 @@ Docker compose will up two containers, one for the client and another for the se
 make build
 make run
 ```
+#### dependencies
+- make
+- docker
+- docker-compose
