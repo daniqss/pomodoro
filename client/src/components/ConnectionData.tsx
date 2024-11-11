@@ -1,47 +1,65 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { WsContext, WsContextType } from "../contexts/ws";
 import ClipboardIcon from "./icons/clipboardIcon";
 
 function ConnectionData({ users }: { users: string[] }) {
   const { room } = useContext(WsContext) as WsContextType & { room: string };
+  const [copied, setCopied] = useState(false);
+
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(room);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   return (
-    <section className="text-gray-800 text-center rounded">
-      <h3 className="text-white text-3xl">Connected successfully!</h3>
-      <p className="text-white text-lg">
+    <section className="bg-zinc-800 shadow-lg rounded-lg overflow-hidden p-6 text-center">
+      <h3 className="text-white text-2xl font-bold mb-2">
+        Connected successfully!
+      </h3>
+      <p className="text-gray-400 mb-6">
         Share this room name with your partners to start working!
       </p>
 
-      <article className="inline-flex items-center justify-center w-auto bg-white rounded-lg text-zinc-950 p-2 shadow-lg min-h-4 m-auto mt-5">
-        <h4 className="text-xl mr-4">Room name:</h4>
-        <div className="text-white rounded-md flex flex-row bg-zinc-800">
-          <p className="px-2 py-1">{room}</p>
+      <div className="bg-zinc-700 rounded-lg p-4 mb-6">
+        <h4 className="text-white text-lg mb-2">Room name:</h4>
+        <div className="flex items-center justify-center bg-zinc-600 rounded-md">
+          <p className="px-3 py-2 text-white">{room}</p>
           <button
-            className="px-3 py-1 hover:bg-zinc-600 rounded"
-            onClick={() => navigator.clipboard.writeText(room)}
+            className="px-3 py-2 hover:bg-zinc-500 rounded-r-md transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50"
+            onClick={copyToClipboard}
           >
-            <ClipboardIcon />
+            <ClipboardIcon className="w-5 h-5 text-white" />
           </button>
         </div>
-      </article>
+        {copied && (
+          <p className="text-green-400 mt-2 text-sm">Copied to clipboard!</p>
+        )}
+      </div>
 
       {users.length > 1 ? (
-        <div className="mt-5">
-          <h3 className="text-white text-2xl">Connected partners:</h3>
-          <ul className="text-white text-lg">
-            {users.map((user, index) =>
-              index === 0 ? (
-                <li key={index}>
-                  <b>you</b>: {user}
-                </li>
-              ) : (
-                <li key={index}>{user}</li>
-              ),
-            )}
+        <div>
+          <h3 className="text-white text-xl font-semibold mb-3">
+            Connected partners:
+          </h3>
+          <ul className="text-gray-300 space-y-1">
+            {users.map((user, index) => (
+              <li key={index} className="bg-zinc-700 rounded-md py-2 px-3">
+                {index === 0 ? (
+                  <span>
+                    <b className="font-semibold">You:</b> {user}
+                  </span>
+                ) : (
+                  user
+                )}
+              </li>
+            ))}
           </ul>
         </div>
       ) : (
-        <h3 className="text-white text-2xl">Waiting for partners to join...</h3>
+        <h3 className="text-white text-xl font-semibold">
+          Waiting for partners to join...
+        </h3>
       )}
     </section>
   );

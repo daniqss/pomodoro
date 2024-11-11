@@ -20,11 +20,6 @@ let rooms: Set<string> = new Set();
 
 // debug endpoint
 app.get("/rooms", (req, res) => {
-  // if (process.env.NODE_ENV !== "development") {
-  //   res.status(404).send("Not found");
-  //   return;
-  // }
-
   const roomsUsers = [];
   for (const room of rooms) {
     const users = Array.from(io.sockets.adapter.rooms.get(room));
