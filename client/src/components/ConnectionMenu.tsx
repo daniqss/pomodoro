@@ -1,10 +1,14 @@
 import { useContext, useState, useEffect } from "react";
 import { WsContext, WsContextType } from "../contexts/ws";
-import { roomCreatedMessage, roomJoinedMessage } from "../../../types/messages";
+import {
+  roomCreatedMessage,
+  roomJoinedMessage,
+  user,
+} from "../../../types/messages";
 import { TimerContext, TimerContextType } from "../contexts/timer";
 
 type ConnectionMenuProps = {
-  setUsers: React.Dispatch<React.SetStateAction<string[]>>;
+  setUsers: React.Dispatch<React.SetStateAction<user[]>>;
   setIsConnected: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
@@ -26,8 +30,8 @@ function ConnectionMenu({ setIsConnected, setUsers }: ConnectionMenuProps) {
       setUsers((prev) => {
         if (prev[0] === undefined) {
           return [
-            socket.id,
-            ...roomData.users.filter((user) => user !== socket.id),
+            { id: socket.id, name: socket.id },
+            ...roomData.users.filter((user) => user.id !== socket.id),
           ];
         }
         return roomData.users;

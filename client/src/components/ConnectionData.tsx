@@ -1,8 +1,9 @@
 import { useContext, useState } from "react";
 import { WsContext, WsContextType } from "../contexts/ws";
 import ClipboardIcon from "./icons/clipboardIcon";
+import { user } from "../../../types/messages";
 
-function ConnectionData({ users }: { users: string[] }) {
+function ConnectionData({ users }: { users: user[] }) {
   const { room } = useContext(WsContext) as WsContextType & { room: string };
   const [copied, setCopied] = useState(false);
 
@@ -47,10 +48,10 @@ function ConnectionData({ users }: { users: string[] }) {
               <li key={index} className="bg-zinc-700 rounded-md py-2 px-3">
                 {index === 0 ? (
                   <span>
-                    <b className="font-semibold">You:</b> {user}
+                    <b className="font-semibold">You:</b> {user.name}
                   </span>
                 ) : (
-                  user
+                  user.name
                 )}
               </li>
             ))}

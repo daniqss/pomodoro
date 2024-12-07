@@ -19,7 +19,7 @@ const io = new Server(server, { cors: { origin: "*" } });
 let rooms: Set<string> = new Set();
 
 // debug endpoint
-app.get("/rooms", (req, res) => {
+app.get("/rooms", (_req, res) => {
   const roomsUsers = [];
   for (const room of rooms) {
     const users = Array.from(io.sockets.adapter.rooms.get(room));

@@ -1,13 +1,11 @@
 import { v4 as uuid } from "uuid";
 import { Socket } from "socket.io";
-import { Response } from "express";
 import debug from "../utils/debug.js";
 import {
-  joinRoomMessage,
+  room,
+  user,
   roomCreatedMessage,
   roomJoinedMessage,
-  updatedTimerMessage,
-  userJoinedMessage,
 } from "../../../types/messages.js";
 import TimerServerMessages from "./timerMessages.js";
 
@@ -23,11 +21,7 @@ export default class RoomServerMessages {
   // Server joins the room and sends a message to
   // - the new user, with the rest of the current users of the room
   // - the rest of the users in the room, with the new user
-  static joinRoom(
-    socket: Socket,
-    room: joinRoomMessage,
-    currentUsers: Set<string>,
-  ) {
+  static joinRoom(socket: Socket, room: room, currentUsers: Set<string>) {
     if (!currentUsers) {
       debug(`Room ${room} does not exist`);
       socket.emit("room-joined", "Room does not exist");
@@ -37,14 +31,14 @@ export default class RoomServerMessages {
 
     const roomMessage: roomJoinedMessage = {
       room: room,
-      users: Array.from(currentUsers),
+      users: Array.from(currentUsers).map((id): user => ({ id: id, name: id })),
     };
     debug(roomMessage);
 
     TimerServerMessages.getTimer(socket, room);
 
     socket.emit("room-joined", roomMessage);
-    socket.to(room).emit("user-joined", socket.id);
+    socket.to(room).emit("user-joined", { id: socket.id, name: socket.id });
   }
 
   // desconnect a user from a room and notify the rest of the users in the room
