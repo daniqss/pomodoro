@@ -5,15 +5,15 @@ import { WsContext, WsContextType } from "../contexts/ws";
 import { user, userJoinedMessage } from "../../../types/messages";
 
 function ConnectionManager() {
-  const { socket } = useContext(WsContext) as WsContextType;
+  const { socket, userName } = useContext(WsContext) as WsContextType;
   const [isConnected, setIsConnected] = useState(false);
   const [users, setUsers] = useState<user[]>([]);
 
   useEffect(() => {
     const handleUserJoined = (userJoinedMessage: userJoinedMessage) => {
       setUsers((prev) => {
-        if (prev[0] === undefined) {
-          return [{ id: socket.id, name: socket.id }, userJoinedMessage];
+        if (prev.length === 0) {
+          return [{ id: socket.id, name: userName }, userJoinedMessage];
         }
         return [...prev, userJoinedMessage];
       });
@@ -24,7 +24,7 @@ function ConnectionManager() {
     return () => {
       socket.off("user-joined", handleUserJoined);
     };
-  }, [socket]);
+  }, [socket, userName]);
 
   useEffect(() => {
     socket.on("user-disconnected", (userId: string) => {

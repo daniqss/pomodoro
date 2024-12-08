@@ -16,7 +16,9 @@ function ConnectionMenu({ setIsConnected, setUsers }: ConnectionMenuProps) {
   const { isPaused, setIsPaused } = useContext(
     TimerContext,
   ) as TimerContextType;
-  const { socket, setRoom } = useContext(WsContext) as WsContextType;
+  const { socket, setRoom, userName, setUserName } = useContext(
+    WsContext,
+  ) as WsContextType;
   const [joinValue, setJoinValue] = useState("");
 
   useEffect(() => {
@@ -59,11 +61,16 @@ function ConnectionMenu({ setIsConnected, setUsers }: ConnectionMenuProps) {
 
   const handleJoinRoom = (e: React.FormEvent) => {
     e.preventDefault();
+    if (userName !== "") sessionStorage.setItem("name", userName);
     if (!joinValue.trim()) return;
 
     // clean whatever the state was
     setIsPaused(true);
-    socket.emit("join-room", joinValue);
+    console.log(`user ${userName} ${socket.id} joining room ${joinValue}`);
+    socket.emit("join-room", {
+      room: joinValue,
+      user: { id: socket.id, name: userName === "" ? socket.id : userName },
+    });
   };
 
   return (
@@ -76,7 +83,15 @@ function ConnectionMenu({ setIsConnected, setUsers }: ConnectionMenuProps) {
           Connect with your friends
         </p>
 
-        <form onSubmit={handleJoinRoom} className="mb-6">
+        <input
+          type="text"
+          id="userName"
+          value={userName}
+          onChange={(e) => setUserName(e.target.value)}
+          placeholder={userName !== "" ? userName : "Enter your username"}
+          className="w-full px-4 py-2 bg-zinc-700 text-white border border-zinc-600 rounded-md focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent transition duration-150 ease-in-out placeholder-gray-400"
+        />
+        <form onSubmit={handleJoinRoom} className="my-6">
           <input
             type="text"
             id="roomName"
@@ -104,7 +119,10 @@ function ConnectionMenu({ setIsConnected, setUsers }: ConnectionMenuProps) {
 
         <button
           className="w-full mt-6 bg-zinc-700 text-white py-2 px-4 rounded-md hover:bg-zinc-600 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 transition duration-150 ease-in-out"
-          onClick={() => {
+          onClick={(e: React.FormEvent) => {
+            e.preventDefault();
+            if (userName !== "") sessionStorage.setItem("name", userName);
+
             socket.emit("create-room");
           }}
         >

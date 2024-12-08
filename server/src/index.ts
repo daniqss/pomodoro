@@ -39,11 +39,11 @@ io.on("connection", async (socket) => {
     rooms.add(newRoom);
   });
 
-  socket.on("join-room", async (room: joinRoomMessage) =>
+  socket.on("join-room", async (message: joinRoomMessage) =>
     RoomServerMessages.joinRoom(
       socket,
-      room,
-      io.sockets.adapter.rooms.get(room),
+      message,
+      io.sockets.adapter.rooms.get(message.room),
     ),
   );
 

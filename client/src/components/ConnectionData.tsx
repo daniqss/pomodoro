@@ -4,7 +4,9 @@ import ClipboardIcon from "./icons/clipboardIcon";
 import { user } from "../../../types/messages";
 
 function ConnectionData({ users }: { users: user[] }) {
-  const { room } = useContext(WsContext) as WsContextType & { room: string };
+  const { room } = useContext(WsContext) as WsContextType & {
+    room: string;
+  };
   const [copied, setCopied] = useState(false);
 
   const copyToClipboard = () => {
@@ -48,10 +50,12 @@ function ConnectionData({ users }: { users: user[] }) {
               <li key={index} className="bg-zinc-700 rounded-md py-2 px-3">
                 {index === 0 ? (
                   <span>
-                    <b className="font-semibold">You:</b> {user.name}
+                    <p className="font-semibold">You:</p> {user.id} {user.name}
                   </span>
                 ) : (
-                  user.name
+                  <span>
+                    {user.id} {user.name}
+                  </span>
                 )}
               </li>
             ))}

@@ -8,7 +8,7 @@ export type user = {
 export type room = string;
 export type createRoomMessage = {};
 export type roomCreatedMessage = room;
-export type joinRoomMessage = room;
+export type joinRoomMessage = { room: room; user: user };
 export type joinSuccefullyMessage = {
   room: string;
   users: user[];

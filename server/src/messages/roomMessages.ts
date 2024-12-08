@@ -6,6 +6,7 @@ import {
   user,
   roomCreatedMessage,
   roomJoinedMessage,
+  joinRoomMessage,
 } from "../../../types/messages.js";
 import TimerServerMessages from "./timerMessages.js";
 
@@ -21,24 +22,33 @@ export default class RoomServerMessages {
   // Server joins the room and sends a message to
   // - the new user, with the rest of the current users of the room
   // - the rest of the users in the room, with the new user
-  static joinRoom(socket: Socket, room: room, currentUsers: Set<string>) {
+  static joinRoom(
+    socket: Socket,
+    message: joinRoomMessage,
+    currentUsers: Set<string>,
+  ) {
     if (!currentUsers) {
-      debug(`Room ${room} does not exist`);
+      debug(`Room ${message.room} does not exist`);
       socket.emit("room-joined", "Room does not exist");
       return;
     }
-    socket.join(room);
+    socket.join(message.room);
 
     const roomMessage: roomJoinedMessage = {
-      room: room,
+      room: message.room,
       users: Array.from(currentUsers).map((id): user => ({ id: id, name: id })),
     };
     debug(roomMessage);
 
-    TimerServerMessages.getTimer(socket, room);
+    TimerServerMessages.getTimer(socket, message.room);
 
     socket.emit("room-joined", roomMessage);
-    socket.to(room).emit("user-joined", { id: socket.id, name: socket.id });
+    debug(
+      `User ${message.user.id} ${message.user.name} joined room ${message.room}`,
+    );
+    socket
+      .to(message.room)
+      .emit("user-joined", { id: socket.id, name: message.user.name });
   }
 
   // desconnect a user from a room and notify the rest of the users in the room
