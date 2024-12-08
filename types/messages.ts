@@ -6,7 +6,7 @@ export type user = {
 };
 
 export type room = string;
-export type createRoomMessage = {};
+export type createRoomMessage = user;
 export type roomCreatedMessage = room;
 export type joinRoomMessage = { room: room; user: user };
 export type joinSuccefullyMessage = {

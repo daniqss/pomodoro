@@ -25,6 +25,7 @@ export default class RoomServerMessages {
   static joinRoom(
     socket: Socket,
     message: joinRoomMessage,
+    usersNames: Map<string, string>,
     currentUsers: Set<string>,
   ) {
     if (!currentUsers) {
@@ -36,7 +37,12 @@ export default class RoomServerMessages {
 
     const roomMessage: roomJoinedMessage = {
       room: message.room,
-      users: Array.from(currentUsers).map((id): user => ({ id: id, name: id })),
+      users: Array.from(currentUsers).map(
+        (id): user =>
+          id === socket.id
+            ? message.user
+            : { id: id, name: usersNames.get(id) },
+      ),
     };
     debug(roomMessage);
 

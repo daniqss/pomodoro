@@ -123,7 +123,10 @@ function ConnectionMenu({ setIsConnected, setUsers }: ConnectionMenuProps) {
             e.preventDefault();
             if (userName !== "") sessionStorage.setItem("name", userName);
 
-            socket.emit("create-room");
+            socket.emit("create-room", {
+              id: socket.id,
+              name: userName === "" ? socket.id : userName,
+            });
           }}
         >
           Create New Room

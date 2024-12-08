@@ -2,7 +2,11 @@ import express from "express";
 import { Server } from "socket.io";
 import { createServer } from "node:http";
 import debug from "./utils/debug.js";
-import { joinRoomMessage, updatedTimerMessage } from "../../types/messages.js";
+import {
+  createRoomMessage,
+  joinRoomMessage,
+  updatedTimerMessage,
+} from "../../types/messages.js";
 import RoomServerMessages from "./messages/roomMessages.js";
 import TimerServerMessages from "./messages/timerMessages.js";
 const PORT = process.env.PORT ?? 3000;
@@ -15,8 +19,12 @@ app.use(cors({ origin: "*" }));
 const server = createServer(app);
 const io = new Server(server, { cors: { origin: "*" } });
 
-// save the rooms in memory
-let rooms: Set<string> = new Set();
+// save in server memory a set of rooms
+const rooms = new Set<string>();
+
+// save in server memory a hashmap of key: client id and value: their name
+// users will provide their name on room creation or joining a room
+const usersNames = new Map<string, string>();
 
 // debug endpoint
 app.get("/rooms", (_req, res) => {
@@ -29,23 +37,31 @@ app.get("/rooms", (_req, res) => {
   res.json(roomsUsers);
 });
 
+app.get("/users", (_req, res) => {
+  debug(usersNames);
+  res.json(usersNames);
+});
+
 // socket.io connection
 io.on("connection", async (socket) => {
   debug(`socket ${socket.id} connected`);
 
   // room messages
-  socket.on("create-room", async () => {
+  socket.on("create-room", async (message: createRoomMessage) => {
     const newRoom = RoomServerMessages.createRoom(socket);
+    usersNames.set(message.id, message.name);
     rooms.add(newRoom);
   });
 
-  socket.on("join-room", async (message: joinRoomMessage) =>
+  socket.on("join-room", async (message: joinRoomMessage) => {
+    usersNames.set(message.user.id, message.user.name);
     RoomServerMessages.joinRoom(
       socket,
       message,
+      usersNames,
       io.sockets.adapter.rooms.get(message.room),
-    ),
-  );
+    );
+  });
 
   // timer messages
   socket.on("timer-updated", async (updatedTimer: updatedTimerMessage) =>
