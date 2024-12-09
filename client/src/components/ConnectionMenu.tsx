@@ -64,6 +64,8 @@ function ConnectionMenu({ setIsConnected, setUsers }: ConnectionMenuProps) {
 
     // clean whatever the state was
     setIsPaused(true);
+
+    setUserName(userName === "" ? socket.id : userName);
     socket.emit("join-room", {
       room: joinValue,
       user: { id: socket.id, name: userName === "" ? socket.id : userName },
