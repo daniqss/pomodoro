@@ -2,18 +2,18 @@ import ConnectionMenu from "./ConnectionMenu";
 import ConnectionData from "./ConnectionData";
 import { useContext, useEffect, useState } from "react";
 import { WsContext, WsContextType } from "../contexts/ws";
-import { userJoinedMessage } from "../../../types/messages";
+import { user, userJoinedMessage } from "../../../types/messages";
 
 function ConnectionManager() {
-  const { socket } = useContext(WsContext) as WsContextType;
+  const { socket, userName } = useContext(WsContext) as WsContextType;
   const [isConnected, setIsConnected] = useState(false);
-  const [users, setUsers] = useState<string[]>([]);
+  const [users, setUsers] = useState<user[]>([]);
 
   useEffect(() => {
     const handleUserJoined = (userJoinedMessage: userJoinedMessage) => {
       setUsers((prev) => {
-        if (prev[0] === undefined) {
-          return [socket.id, userJoinedMessage];
+        if (prev.length === 0) {
+          return [{ id: socket.id, name: userName }, userJoinedMessage];
         }
         return [...prev, userJoinedMessage];
       });
@@ -24,11 +24,11 @@ function ConnectionManager() {
     return () => {
       socket.off("user-joined", handleUserJoined);
     };
-  }, [socket]);
+  }, [socket, userName]);
 
   useEffect(() => {
     socket.on("user-disconnected", (userId: string) => {
-      setUsers((prev) => prev.filter((user) => user !== userId));
+      setUsers((prev) => prev.filter((user) => user.id !== userId));
     });
   });
 

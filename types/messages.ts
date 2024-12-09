@@ -1,14 +1,20 @@
 import { TimerState } from "./TimerState";
 
-export type createRoomMessage = {};
-export type roomCreatedMessage = string;
-export type joinRoomMessage = string;
+export type user = {
+  id: string;
+  name: string;
+};
+
+export type room = string;
+export type createRoomMessage = user;
+export type roomCreatedMessage = room;
+export type joinRoomMessage = { room: room; user: user };
 export type joinSuccefullyMessage = {
   room: string;
-  users: string[];
+  users: user[];
 };
 export type roomJoinedMessage = joinSuccefullyMessage | string;
-export type userJoinedMessage = string;
+export type userJoinedMessage = user;
 
 export type getTimerMessage = string;
 export type receiveTimerMessage = updatedTimerMessage;

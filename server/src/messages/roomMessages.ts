@@ -1,13 +1,12 @@
 import { v4 as uuid } from "uuid";
 import { Socket } from "socket.io";
-import { Response } from "express";
 import debug from "../utils/debug.js";
 import {
-  joinRoomMessage,
+  room,
+  user,
   roomCreatedMessage,
   roomJoinedMessage,
-  updatedTimerMessage,
-  userJoinedMessage,
+  joinRoomMessage,
 } from "../../../types/messages.js";
 import TimerServerMessages from "./timerMessages.js";
 
@@ -25,26 +24,37 @@ export default class RoomServerMessages {
   // - the rest of the users in the room, with the new user
   static joinRoom(
     socket: Socket,
-    room: joinRoomMessage,
+    message: joinRoomMessage,
+    usersNames: Map<string, string>,
     currentUsers: Set<string>,
   ) {
     if (!currentUsers) {
-      debug(`Room ${room} does not exist`);
+      debug(`Room ${message.room} does not exist`);
       socket.emit("room-joined", "Room does not exist");
       return;
     }
-    socket.join(room);
+    socket.join(message.room);
 
     const roomMessage: roomJoinedMessage = {
-      room: room,
-      users: Array.from(currentUsers),
+      room: message.room,
+      users: Array.from(currentUsers).map(
+        (id): user =>
+          id === socket.id
+            ? message.user
+            : { id: id, name: usersNames.get(id) },
+      ),
     };
     debug(roomMessage);
 
-    TimerServerMessages.getTimer(socket, room);
+    TimerServerMessages.getTimer(socket, message.room);
 
     socket.emit("room-joined", roomMessage);
-    socket.to(room).emit("user-joined", socket.id);
+    debug(
+      `User ${message.user.id} ${message.user.name} joined room ${message.room}`,
+    );
+    socket
+      .to(message.room)
+      .emit("user-joined", { id: socket.id, name: message.user.name });
   }
 
   // desconnect a user from a room and notify the rest of the users in the room

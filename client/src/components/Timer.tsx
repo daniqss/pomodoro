@@ -73,7 +73,6 @@ function Timer() {
       timerState: timerState,
     };
 
-    console.log("Emitting timer update:", timerUpdate);
     socket.emit("timer-updated", timerUpdate);
   };
 
