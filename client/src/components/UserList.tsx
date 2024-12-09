@@ -24,14 +24,22 @@ export default function UserList({ users }: { users: user[] }) {
 function UserElement({ user }: { user: user }) {
   const { socket } = useContext(WsContext) as WsContextType;
   return (
-    <article className="flex flex-row content-center space-x-2">
+    <article className="flex flex-row items-center space-x-2 overflow-hidden">
       <ProfileIcon className="w-6 h-6 text-gray-400 mr-1 mt-1" />
-      {user.id === socket.id ? (
-        <h4 className="text-xl font-semibold">{user.name}</h4>
-      ) : (
-        <h4 className="text-xl">{user.name}</h4>
-      )}
-      <p className="text-xs text-gray-400 pt-3">{user.id}</p>
+      <div className="flex flex-col sm:flex-row sm:items-center space-y-1 sm:space-y-0 sm:space-x-2 min-w-0 mt-1">
+        {user.id === socket.id ? (
+          <h4 className="text-lg font-semibold truncate sm:text-base md:text-lg">
+            {user.name}
+          </h4>
+        ) : (
+          <h4 className="text-lg truncate sm:text-base md:text-lg">
+            {user.name}
+          </h4>
+        )}
+        <p className="text-xs text-gray-400 truncate sm:text-[8px] md:text-xs pt-1 hidden sm:inline">
+          {user.id}
+        </p>
+      </div>
     </article>
   );
 }

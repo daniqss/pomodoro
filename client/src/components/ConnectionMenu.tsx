@@ -94,6 +94,7 @@ function ConnectionMenu({ setIsConnected, setUsers }: ConnectionMenuProps) {
           type="text"
           id="userName"
           value={userName}
+          required
           onChange={(e) => setUserName(e.target.value)}
           placeholder={userName !== "" ? userName : "Enter your username"}
           className="w-full px-4 py-2 bg-zinc-700 text-white border border-zinc-600 rounded-md focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent transition duration-150 ease-in-out placeholder-gray-400"
