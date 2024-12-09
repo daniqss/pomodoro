@@ -23,7 +23,6 @@ export default function UserList({ users }: { users: user[] }) {
 
 function UserElement({ user }: { user: user }) {
   const { socket } = useContext(WsContext) as WsContextType;
-  console.log(`user ${user.name} with id ${user.id}`);
   return (
     <article className="flex flex-row content-center space-x-2">
       <ProfileIcon className="w-6 h-6 text-gray-400 mr-1 mt-1" />

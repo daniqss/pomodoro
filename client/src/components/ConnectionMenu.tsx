@@ -43,11 +43,9 @@ function ConnectionMenu({ setIsConnected, setUsers }: ConnectionMenuProps) {
       socket.emit("timer-state-update", { isPaused: true });
 
       setIsConnected(true);
-      console.log("Room joined, timer paused:", { isPaused });
     });
 
     socket.on("room-created", (room: roomCreatedMessage) => {
-      console.log(`Room created: ${room}`);
       setRoom(room);
       setIsConnected(true);
     });
@@ -66,7 +64,6 @@ function ConnectionMenu({ setIsConnected, setUsers }: ConnectionMenuProps) {
 
     // clean whatever the state was
     setIsPaused(true);
-    console.log(`user ${userName} ${socket.id} joining room ${joinValue}`);
     socket.emit("join-room", {
       room: joinValue,
       user: { id: socket.id, name: userName === "" ? socket.id : userName },
