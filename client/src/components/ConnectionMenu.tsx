@@ -73,6 +73,16 @@ function ConnectionMenu({ setIsConnected, setUsers }: ConnectionMenuProps) {
     });
   };
 
+  const handleCreateRoom = () => {
+    if (userName !== "") sessionStorage.setItem("name", userName);
+    if (userName === "") setUserName(socket.id);
+    setUsers([{ id: socket.id, name: userName }]);
+    socket.emit("create-room", {
+      id: socket.id,
+      name: userName === "" ? socket.id : userName,
+    });
+  };
+
   return (
     <section className="bg-zinc-800 shadow-lg rounded-lg overflow-hidden">
       <div className="px-6 py-8">
@@ -91,7 +101,24 @@ function ConnectionMenu({ setIsConnected, setUsers }: ConnectionMenuProps) {
           placeholder={userName !== "" ? userName : "Enter your username"}
           className="w-full px-4 py-2 bg-zinc-700 text-white border border-zinc-600 rounded-md focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent transition duration-150 ease-in-out placeholder-gray-400"
         />
-        <form onSubmit={handleJoinRoom} className="my-6">
+
+        <button
+          className="w-full my-4 mt-8 bg-zinc-700 text-white py-2 px-4 rounded-md hover:bg-zinc-600 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 transition duration-150 ease-in-out"
+          onClick={handleCreateRoom}
+        >
+          Create New Room
+        </button>
+
+        <div className="relative">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-zinc-600"></div>
+          </div>
+          <div className="relative flex justify-center text-sm">
+            <span className="px-2 bg-zinc-800 text-gray-400">Or</span>
+          </div>
+        </div>
+
+        <form onSubmit={handleJoinRoom} className="mt-4">
           <input
             type="text"
             id="roomName"
@@ -107,30 +134,6 @@ function ConnectionMenu({ setIsConnected, setUsers }: ConnectionMenuProps) {
             Join Room
           </button>
         </form>
-
-        <div className="relative">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-zinc-600"></div>
-          </div>
-          <div className="relative flex justify-center text-sm">
-            <span className="px-2 bg-zinc-800 text-gray-400">Or</span>
-          </div>
-        </div>
-
-        <button
-          className="w-full mt-6 bg-zinc-700 text-white py-2 px-4 rounded-md hover:bg-zinc-600 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 transition duration-150 ease-in-out"
-          onClick={(e: React.FormEvent) => {
-            e.preventDefault();
-            if (userName !== "") sessionStorage.setItem("name", userName);
-
-            socket.emit("create-room", {
-              id: socket.id,
-              name: userName === "" ? socket.id : userName,
-            });
-          }}
-        >
-          Create New Room
-        </button>
       </div>
     </section>
   );

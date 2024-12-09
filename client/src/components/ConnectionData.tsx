@@ -2,9 +2,10 @@ import { useContext, useState } from "react";
 import { WsContext, WsContextType } from "../contexts/ws";
 import ClipboardIcon from "./icons/clipboardIcon";
 import { user } from "../../../types/messages";
+import UserList from "./UserList";
 
 function ConnectionData({ users }: { users: user[] }) {
-  const { socket, room, userName } = useContext(WsContext) as WsContextType & {
+  const { room } = useContext(WsContext) as WsContextType & {
     room: string;
   };
   const [copied, setCopied] = useState(false);
@@ -40,33 +41,12 @@ function ConnectionData({ users }: { users: user[] }) {
         )}
       </div>
 
-      {users.length > 1 ? (
-        <div>
-          <h3 className="text-white text-xl font-semibold mb-3">
-            Connected partners:
-          </h3>
-          <ul className="text-gray-300 space-y-1">
-            {users.map((user, index) => (
-              <li key={index} className="bg-zinc-700 rounded-md py-2 px-3">
-                {index === 0 ? (
-                  <span>
-                    <p className="font-semibold">You:</p> {socket.id}{" "}
-                    {userName === "" ? socket.id : userName}
-                  </span>
-                ) : (
-                  <span>
-                    {user.id} {user.name}
-                  </span>
-                )}
-              </li>
-            ))}
-          </ul>
-        </div>
-      ) : (
-        <h3 className="text-white text-xl font-semibold">
-          Waiting for partners to join...
+      <section>
+        <h3 className="text-white text-xl font-semibold mb-3">
+          Connected partners:
         </h3>
-      )}
+        <UserList users={users} />
+      </section>
     </section>
   );
 }
