@@ -5,7 +5,7 @@ import {
   roomJoinedMessage,
   updatedTimerMessage,
   user,
-} from "../types/messages";
+} from "../types/messages.js";
 
 const userSchema = z.object({
   id: z.string(),
@@ -35,22 +35,24 @@ const updatedTimerMessageSchema = z.object({
   timerState: z.enum(["focus", "shortBreak", "longBreak"]),
 });
 
-export function validateUser(user: user) {
-  return userSchema.safeParse(user);
-}
+export default class MessageValidator {
+  static validateUser(user: user) {
+    return userSchema.safeParse(user);
+  }
 
-export function validateJoinRoomMessage(message: joinRoomMessage) {
-  return joinRoomMessage.safeParse(message);
-}
+  static validateJoinRoomMessage(message: joinRoomMessage) {
+    return joinRoomMessage.safeParse(message);
+  }
 
-export function validateJoinSuccefullyMessage(message: joinSuccefullyMessage) {
-  return joinSuccefullyMessageSchema.safeParse(message);
-}
+  static validateJoinSuccefullyMessage(message: joinSuccefullyMessage) {
+    return joinSuccefullyMessageSchema.safeParse(message);
+  }
 
-export function validateRoomJoinedMessageSchema(message: roomJoinedMessage) {
-  return roomJoinedMessageSchema.safeParse(message);
-}
+  static validateRoomJoinedMessageSchema(message: roomJoinedMessage) {
+    return roomJoinedMessageSchema.safeParse(message);
+  }
 
-export function validateUpdatedTimerMessage(message: updatedTimerMessage) {
-  return updatedTimerMessageSchema.safeParse(message);
+  static validateUpdatedTimerMessage(message: updatedTimerMessage) {
+    return updatedTimerMessageSchema.safeParse(message);
+  }
 }
