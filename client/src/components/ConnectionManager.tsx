@@ -3,6 +3,7 @@ import ConnectionData from "./ConnectionData";
 import { useContext, useEffect, useState } from "react";
 import { WsContext, WsContextType } from "../contexts/ws";
 import { user, userJoinedMessage } from "../../../shared/types/messages";
+import MessageValidator from "../../../shared/schemas/messageValidation";
 
 function ConnectionManager() {
   const { socket, userName } = useContext(WsContext) as WsContextType;
@@ -11,11 +12,17 @@ function ConnectionManager() {
 
   useEffect(() => {
     const handleUserJoined = (userJoinedMessage: userJoinedMessage) => {
+      const result = MessageValidator.validateUser(userJoinedMessage);
+      if (!result.success) {
+        console.error(result.error);
+        return;
+      }
+
       setUsers((prev) => {
         if (prev.length === 0) {
-          return [{ id: socket.id, name: userName }, userJoinedMessage];
+          return [{ id: socket.id, name: userName }, result.data];
         }
-        return [...prev, userJoinedMessage];
+        return [...prev, result.data];
       });
     };
 

@@ -40,6 +40,10 @@ export default class MessageValidator {
     return userSchema.safeParse(user);
   }
 
+  static validateRoomCreatedMessage(room: string) {
+    return z.string().safeParse(room);
+  }
+
   static validateJoinRoomMessage(message: joinRoomMessage) {
     return joinRoomMessage.safeParse(message);
   }

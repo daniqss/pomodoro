@@ -1,11 +1,13 @@
 import { useContext, useState, useEffect } from "react";
 import { WsContext, WsContextType } from "../contexts/ws";
 import {
+  joinSuccefullyMessage,
   roomCreatedMessage,
   roomJoinedMessage,
   user,
 } from "../../../shared/types/messages";
 import { TimerContext, TimerContextType } from "../contexts/timer";
+import MessageValidator from "../../../shared/schemas/messageValidation";
 
 type ConnectionMenuProps = {
   setUsers: React.Dispatch<React.SetStateAction<user[]>>;
@@ -23,20 +25,22 @@ function ConnectionMenu({ setIsConnected, setUsers }: ConnectionMenuProps) {
 
   useEffect(() => {
     socket.on("room-joined", (roomData: roomJoinedMessage) => {
-      if (typeof roomData === "string") {
-        console.error(`Error joining room: ${roomData}`);
+      const result = MessageValidator.validateRoomJoinedMessageSchema(roomData);
+      if (!result.success || typeof result.data === "string") {
+        console.error(result.error);
         return;
       }
+      const data = result.data as joinSuccefullyMessage;
 
-      setRoom(roomData.room);
+      setRoom(data.room);
       setUsers((prev) => {
         if (prev[0] === undefined) {
           return [
             { id: socket.id, name: socket.id },
-            ...roomData.users.filter((user) => user.id !== socket.id),
+            ...data.users.filter((user) => user.id !== socket.id),
           ];
         }
-        return roomData.users;
+        return data.users;
       });
 
       setIsPaused(true);
@@ -46,6 +50,12 @@ function ConnectionMenu({ setIsConnected, setUsers }: ConnectionMenuProps) {
     });
 
     socket.on("room-created", (room: roomCreatedMessage) => {
+      const result = MessageValidator.validateRoomCreatedMessage(room);
+      if (!result.success) {
+        console.error(result.error);
+        return;
+      }
+
       setRoom(room);
       setIsConnected(true);
     });

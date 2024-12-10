@@ -8,6 +8,7 @@ import {
   getTimerMessage,
   updatedTimerMessage,
 } from "../../../shared/types/messages";
+import MessageValidator from "../../../shared/schemas/messageValidation";
 
 function Timer() {
   const { isPaused, setIsPaused, timerState, timerClasses, focusStrikes } =
@@ -18,17 +19,19 @@ function Timer() {
 
   // Listen for timer-updated events from the server
   useEffect(() => {
-    const handleTimerUpdate = ({
-      isPaused: newIsPaused,
-      newMinutes,
-      newSeconds,
-      timerState: newTimerState,
-    }: updatedTimerMessage) => {
+    const handleTimerUpdate = (updatedTimer: updatedTimerMessage) => {
+      const result = MessageValidator.validateUpdatedTimerMessage(updatedTimer);
+      if (!result.success) {
+        console.error(result.error);
+        return;
+      }
+      const updatedChecked = result.data as updatedTimerMessage;
+
       // update timer state
-      setIsPaused(newIsPaused);
-      setMinutes(newMinutes);
-      setSeconds(newSeconds);
-      setTimerState(newTimerState);
+      setIsPaused(updatedChecked.isPaused);
+      setMinutes(updatedChecked.newMinutes);
+      setSeconds(updatedChecked.newSeconds);
+      setTimerState(updatedChecked.timerState);
     };
 
     socket.on("timer-updated", handleTimerUpdate);
@@ -44,16 +47,20 @@ function Timer() {
       // pause when new user joins
       setIsPaused(true);
 
-      const roomCurrentState: updatedTimerMessage = {
+      const result = MessageValidator.validateUpdatedTimerMessage({
         room: receiver,
         isPaused: true,
         newMinutes: minutes,
         newSeconds: seconds,
         timerState: timerState,
-      };
+      });
+      if (!result.success) {
+        console.error(result.error);
+        return;
+      }
 
       // send current timer state to new user
-      socket.emit("timer-updated", roomCurrentState);
+      socket.emit("timer-updated", result.data);
     };
 
     socket.on("get-timer", handleGetTimer);
@@ -76,7 +83,12 @@ function Timer() {
       timerState: timerState,
     };
 
-    socket.emit("timer-updated", timerUpdate);
+    const result = MessageValidator.validateUpdatedTimerMessage(timerUpdate);
+    if (!result.success) {
+      console.error(result.error);
+      return;
+    }
+    socket.emit("timer-updated", result.data);
   };
 
   return (
