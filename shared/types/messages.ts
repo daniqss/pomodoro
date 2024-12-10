@@ -1,4 +1,4 @@
-import { TimerState } from "./TimerState";
+import { TimerState } from "./timerState";
 
 export type user = {
   id: string;
