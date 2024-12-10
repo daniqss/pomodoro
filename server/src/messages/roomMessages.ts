@@ -7,7 +7,7 @@ import {
   roomCreatedMessage,
   roomJoinedMessage,
   joinRoomMessage,
-} from "../../../types/messages.js";
+} from "../../../shared/types/messages.js";
 import TimerServerMessages from "./timerMessages.js";
 
 export default class RoomServerMessages {

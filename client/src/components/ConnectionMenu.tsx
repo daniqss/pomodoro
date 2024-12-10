@@ -4,7 +4,7 @@ import {
   roomCreatedMessage,
   roomJoinedMessage,
   user,
-} from "../../../types/messages";
+} from "../../../shared/types/messages";
 import { TimerContext, TimerContextType } from "../contexts/timer";
 
 type ConnectionMenuProps = {

@@ -2,7 +2,7 @@ import ConnectionMenu from "./ConnectionMenu";
 import ConnectionData from "./ConnectionData";
 import { useContext, useEffect, useState } from "react";
 import { WsContext, WsContextType } from "../contexts/ws";
-import { user, userJoinedMessage } from "../../../types/messages";
+import { user, userJoinedMessage } from "../../../shared/types/messages";
 
 function ConnectionManager() {
   const { socket, userName } = useContext(WsContext) as WsContextType;

@@ -4,7 +4,10 @@ import { TimerContext, TimerContextType } from "../contexts/timer";
 import PlayIcon from "./icons/playIcon";
 import PauseIcon from "./icons/pauseIcon";
 import { WsContext, WsContextType } from "../contexts/ws";
-import { getTimerMessage, updatedTimerMessage } from "../../../types/messages";
+import {
+  getTimerMessage,
+  updatedTimerMessage,
+} from "../../../shared/types/messages";
 
 function Timer() {
   const { isPaused, setIsPaused, timerState, timerClasses, focusStrikes } =

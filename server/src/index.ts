@@ -6,7 +6,7 @@ import {
   createRoomMessage,
   joinRoomMessage,
   updatedTimerMessage,
-} from "../../types/messages.js";
+} from "../../shared/types/messages.js";
 import RoomServerMessages from "./messages/roomMessages.js";
 import TimerServerMessages from "./messages/timerMessages.js";
 const PORT = process.env.PORT ?? 3000;
