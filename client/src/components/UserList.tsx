@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { user } from "../../../types/messages";
+import { user } from "../../../shared/types/messages";
 import { WsContext, WsContextType } from "../contexts/ws";
 import ProfileIcon from "./icons/profileIcon";
 

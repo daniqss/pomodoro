@@ -3,7 +3,7 @@ import {
   getTimerMessage,
   receiveTimerMessage,
   updatedTimerMessage,
-} from "../../../types/messages.js";
+} from "../../../shared/types/messages.js";
 import { debug } from "console";
 
 class TimerServerMessages {

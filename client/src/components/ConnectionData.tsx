@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import { WsContext, WsContextType } from "../contexts/ws";
 import ClipboardIcon from "./icons/clipboardIcon";
-import { user } from "../../../types/messages";
+import { user } from "../../../shared/types/messages";
 import UserList from "./UserList";
 
 function ConnectionData({ users }: { users: user[] }) {

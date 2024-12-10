@@ -6,7 +6,8 @@ import {
   createRoomMessage,
   joinRoomMessage,
   updatedTimerMessage,
-} from "../../types/messages.js";
+} from "../../shared/types/messages.js";
+import MessageValidator from "../../shared/schemas/messageValidation.js";
 import RoomServerMessages from "./messages/roomMessages.js";
 import TimerServerMessages from "./messages/timerMessages.js";
 const PORT = process.env.PORT ?? 3000;
@@ -48,32 +49,51 @@ io.on("connection", async (socket) => {
 
   // room messages
   socket.on("create-room", async (message: createRoomMessage) => {
+    const result = MessageValidator.validateUser(message);
+    if (!result.success) {
+      debug(result.error);
+      return;
+    }
     const newRoom = RoomServerMessages.createRoom(socket);
-    usersNames.set(message.id, message.name);
+    usersNames.set(result.data.id, result.data.name);
     rooms.add(newRoom);
   });
 
   socket.on("join-room", async (message: joinRoomMessage) => {
-    usersNames.set(message.user.id, message.user.name);
+    const result = MessageValidator.validateJoinRoomMessage(message);
+    if (!result.success) {
+      debug(result.error);
+      return;
+    }
+
+    usersNames.set(result.data.user.id, result.data.user.name);
     RoomServerMessages.joinRoom(
       socket,
-      message,
+      result.data as joinRoomMessage,
       usersNames,
       io.sockets.adapter.rooms.get(message.room),
     );
   });
 
   // timer messages
-  socket.on("timer-updated", async (updatedTimer: updatedTimerMessage) =>
-    TimerServerMessages.timerUpdated(socket, updatedTimer),
-  );
+  socket.on("timer-updated", async (updatedTimer: updatedTimerMessage) => {
+    const result = MessageValidator.validateUpdatedTimerMessage(updatedTimer);
+    if (!result.success) {
+      debug(result.error);
+      return;
+    }
+
+    TimerServerMessages.timerUpdated(
+      socket,
+      result.data as updatedTimerMessage,
+    );
+  });
 
   socket.on("disconnecting", async () => {
     // we must use async here because the socket.rooms will be empty
     // if we don't wait enough, so async + copy the socket rooms
     // to be able to communicate with the rest of the users of the room
     const userRooms = new Set(socket.rooms);
-
     for (const room of userRooms) {
       if (room === socket.id) continue;
       const emptyRoom = RoomServerMessages.userDisconnect(
