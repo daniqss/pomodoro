@@ -5,7 +5,7 @@ import {
   useState,
   ReactNode,
 } from "react";
-import { TimerState } from "../../../types/TimerState";
+import { TimerState } from "../../../types/timerState";
 import { IS_DEV } from "../utils/config";
 
 type minutesSecondsType = { minutes: number; seconds: number };
