@@ -7,7 +7,7 @@ export default function UserList({ users }: { users: user[] }) {
   const { userName, socket } = useContext(WsContext) as WsContextType;
 
   return (
-    <ul className="bg-zinc-700 rounded-md  space-y-2 pt-2 pb-1 flex flex-col">
+    <ul className="bg-zinc-700 rounded-md  space-y-2 py-1 flex flex-col">
       {users.map((user, index) => (
         <li key={index} className="py-2 px-3">
           {index === 0 ? (
