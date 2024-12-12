@@ -2,12 +2,11 @@ import { v4 as uuid } from "uuid";
 import { Socket } from "socket.io";
 import debug from "../utils/debug.js";
 import {
-  room,
-  user,
   roomCreatedMessage,
   roomJoinedMessage,
   joinRoomMessage,
 } from "../../../shared/types/messages.js";
+import { user } from "../../../shared/types/user.js";
 import TimerServerMessages from "./timerMessages.js";
 
 export default class RoomServerMessages {

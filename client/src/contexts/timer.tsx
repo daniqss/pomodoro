@@ -5,7 +5,7 @@ import {
   useState,
   ReactNode,
 } from "react";
-import { TimerState } from "../../../shared/types/timerState";
+import { timerState } from "../../../shared/types/timer";
 import { IS_DEV } from "../utils/config";
 
 type minutesSecondsType = { minutes: number; seconds: number };
@@ -34,8 +34,8 @@ export type TimerContextType = {
   setSeconds: Dispatch<SetStateAction<number>>;
   isPaused: boolean;
   setIsPaused: Dispatch<SetStateAction<boolean>>;
-  timerState: TimerState;
-  setTimerState: Dispatch<SetStateAction<TimerState>>;
+  timerState: timerState;
+  setTimerState: Dispatch<SetStateAction<timerState>>;
   focusStrikes: number;
   setFocusStrikes: Dispatch<SetStateAction<number>>;
   strikesAfterLongBreak: number;
@@ -82,7 +82,7 @@ function TimerProvider({ children }: { children: ReactNode }) {
     IS_DEV ? initialTimes.focus.seconds : initialTimes.focus.seconds,
   );
   const [isPaused, setIsPaused] = useState(true);
-  const [timerState, setTimerState] = useState<TimerState>("focus");
+  const [timerState, setTimerState] = useState<timerState>("focus");
   const [focusStrikes, setFocusStrikes] = useState(0);
   const strikesAfterLongBreak = IS_DEV ? 2 : 4;
 

@@ -5,14 +5,15 @@ import debug from "./utils/debug.js";
 import {
   createRoomMessage,
   joinRoomMessage,
-  updatedTimerMessage,
 } from "../../shared/types/messages.js";
+import { updatedTimerMessage } from "../../shared/types/timer.js";
 import MessageValidator from "../../shared/schemas/messageValidation.js";
 import RoomServerMessages from "./messages/roomMessages.js";
 import TimerServerMessages from "./messages/timerMessages.js";
 const PORT = process.env.PORT ?? 3000;
 const HOST_ADDRESS = process.env.HOST_ADDRESS ?? "localhost";
 import cors from "cors";
+import UserValidator from "../../shared/schemas/userValidation.js";
 
 // create the server
 const app = express();
@@ -49,7 +50,7 @@ io.on("connection", async (socket) => {
 
   // room messages
   socket.on("create-room", async (message: createRoomMessage) => {
-    const result = MessageValidator.validateUser(message);
+    const result = UserValidator.validateUser(message);
     if (!result.success) {
       debug(result.error);
       return;

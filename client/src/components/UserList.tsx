@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { user } from "../../../shared/types/messages";
+import { user } from "../../../shared/types/user";
 import { WsContext, WsContextType } from "../contexts/ws";
 import ProfileIcon from "./icons/profileIcon";
 
@@ -45,5 +45,6 @@ function UserElement({ user }: { user: user }) {
         )}
       </div>
     </article>
+    
   );
 }
