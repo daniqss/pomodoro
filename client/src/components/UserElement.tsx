@@ -56,7 +56,7 @@ export default function UserElement({
     <section className="flex flex-col">
       <article className="flex flex-row items-center space-x-2 overflow-hidden">
         <button onClick={() => setIsCreatingTodo(!isCreatingTodo)}>
-          <PlusIcon />
+          <PlusIcon className="w-5 h-5" />
         </button>
         <div className="flex flex-col sm:flex-row sm:items-center space-y-1 sm:space-y-0 sm:space-x-2 min-w-0 mt-1">
           {user.id === socket.id ? (
