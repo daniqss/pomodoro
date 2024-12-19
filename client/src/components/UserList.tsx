@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { user } from "../../../shared/types/user";
-import { todo } from "../../../shared/types/todo";
+import { todo, todoMessage, todoMessageType } from "../../../shared/types/todo";
 import { WsContext, WsContextType } from "../contexts/ws";
 import UserElement from "./UserElement";
 import UserValidator from "../../../shared/schemas/userValidation";
@@ -11,14 +11,37 @@ export default function UserList({ users }: { users: user[] }) {
 
   // receive new todos
   useEffect(() => {
-    socket.on("todos-updated", (newTodo: todo) => {
-      const result = UserValidator.validateTodo(newTodo);
+    socket.on("receive-todo", (message: todoMessage) => {
+      const result = UserValidator.validateTodoMessage(message);
       if (!result.success) {
         console.error(result.error);
         return;
       }
-      setTodos((prev) => [...prev, newTodo]);
+
+      switch (result.data.type) {
+        case todoMessageType.Create:
+          setTodos((prev) => [...prev, result.data.todo]);
+          break;
+        case todoMessageType.Remove:
+          setTodos((prev) =>
+            prev.filter((t) => t.title !== result.data.todo.title),
+          );
+          break;
+        case todoMessageType.Update:
+          setTodos((prev) =>
+            prev.map((t) =>
+              t.title === result.data.todo.title ? result.data.todo : t,
+            ),
+          );
+          break;
+        default:
+          console.error("Invalid todo message type");
+      }
     });
+
+    return () => {
+      socket.off("receive-todo");
+    };
   }, [socket]);
 
   return (

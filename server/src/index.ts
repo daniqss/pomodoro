@@ -90,6 +90,17 @@ io.on("connection", async (socket) => {
     );
   });
 
+  // todo messages
+  socket.on("emit-todo", async (message) => {
+    const result = UserValidator.validateTodoMessage(message);
+    if (!result.success) {
+      debug(result.error);
+      return;
+    }
+
+    socket.to(message.room).emit("receive-todo", message);
+  });
+
   socket.on("disconnecting", async () => {
     // we must use async here because the socket.rooms will be empty
     // if we don't wait enough, so async + copy the socket rooms

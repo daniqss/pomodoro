@@ -12,5 +12,6 @@ export enum todoMessageType {
 
 export type todoMessage = {
   todo: todo;
+  room: string;
   type: todoMessageType;
 };

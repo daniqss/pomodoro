@@ -16,7 +16,9 @@ export default function UserElement({
   userTodos,
   setTodos,
 }: UserElementProps) {
-  const { socket } = useContext(WsContext) as WsContextType;
+  const { socket, room } = useContext(WsContext) as WsContextType & {
+    room: string;
+  };
   const [isCreatingTodo, setIsCreatingTodo] = useState(false);
 
   const handleCreateTodo = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -32,6 +34,7 @@ export default function UserElement({
         };
         const createMessage: todoMessage = {
           todo: newTodo,
+          room,
           type: todoMessageType.Create,
         };
         socket.emit("emit-todo", createMessage);
@@ -43,7 +46,11 @@ export default function UserElement({
   };
 
   const handleRemoveTodo = (todo: todo) => {
-    const removeMessage: todoMessage = { todo, type: todoMessageType.Remove };
+    const removeMessage: todoMessage = {
+      todo,
+      room,
+      type: todoMessageType.Remove,
+    };
     setTodos((prev) => prev.filter((t) => t.title !== todo.title));
     socket.emit("emit-todo", removeMessage);
   };
@@ -55,6 +62,7 @@ export default function UserElement({
           const updatedTodo: todo = { ...t, completed: !t.completed };
           const updateMessage: todoMessage = {
             todo: updatedTodo,
+            room,
             type: todoMessageType.Update,
           };
           socket.emit("emit-todo", updateMessage);
