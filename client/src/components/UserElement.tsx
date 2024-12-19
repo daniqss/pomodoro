@@ -1,6 +1,7 @@
 import { useContext, useState } from "react";
 import { WsContext, WsContextType } from "../contexts/ws";
-import { user, todo } from "../../../shared/types/user";
+import { user } from "../../../shared/types/user";
+import { todo, todoMessage, todoMessageType } from "../../../shared/types/todo";
 import PlusIcon from "./icons/plusIcon";
 import RemoveIcon from "./icons/removeIcon";
 
@@ -24,28 +25,40 @@ export default function UserElement({
         if (prev.some((t) => t.title === e.currentTarget.value.trim()))
           return prev;
 
-        return [
-          ...prev,
-          {
-            title: e.currentTarget.value.trim(),
-            owner: user.id,
-            completed: false,
-          },
-        ];
+        const newTodo = {
+          title: e.currentTarget.value.trim(),
+          owner: user.id,
+          completed: false,
+        };
+        const createMessage: todoMessage = {
+          todo: newTodo,
+          type: todoMessageType.Create,
+        };
+        socket.emit("emit-todo", createMessage);
+
+        return [...prev, newTodo];
       });
       setIsCreatingTodo(false);
     }
   };
 
   const handleRemoveTodo = (todo: todo) => {
+    const removeMessage: todoMessage = { todo, type: todoMessageType.Remove };
     setTodos((prev) => prev.filter((t) => t.title !== todo.title));
+    socket.emit("emit-todo", removeMessage);
   };
 
   const handleCheckTodo = (todo: todo) => {
     setTodos((prev) =>
       prev.map((t) => {
         if (t.title === todo.title && t.owner === todo.owner) {
-          return { ...t, completed: !t.completed };
+          const updatedTodo: todo = { ...t, completed: !t.completed };
+          const updateMessage: todoMessage = {
+            todo: updatedTodo,
+            type: todoMessageType.Update,
+          };
+          socket.emit("emit-todo", updateMessage);
+          return updatedTodo;
         }
         return t;
       }),
