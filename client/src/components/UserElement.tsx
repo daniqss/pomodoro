@@ -106,6 +106,7 @@ export default function UserElement({
               <input
                 id="checkbox"
                 type="checkbox"
+                checked={todo.completed}
                 onChange={() => handleCheckTodo(todo)}
                 className="w-4 h-4 rounded"
               />

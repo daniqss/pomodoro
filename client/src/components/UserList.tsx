@@ -18,19 +18,22 @@ export default function UserList({ users }: { users: user[] }) {
         return;
       }
 
-      switch (result.data.type) {
+      const validatedMessage = result.data;
+      switch (validatedMessage.type) {
         case todoMessageType.Create:
-          setTodos((prev) => [...prev, result.data.todo]);
+          setTodos((prev) => [...prev, validatedMessage.todo]);
           break;
         case todoMessageType.Remove:
           setTodos((prev) =>
-            prev.filter((t) => t.title !== result.data.todo.title),
+            prev.filter((t) => t.title !== validatedMessage.todo.title),
           );
           break;
         case todoMessageType.Update:
           setTodos((prev) =>
             prev.map((t) =>
-              t.title === result.data.todo.title ? result.data.todo : t,
+              t.title === validatedMessage.todo.title
+                ? validatedMessage.todo
+                : t,
             ),
           );
           break;

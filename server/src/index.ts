@@ -98,7 +98,8 @@ io.on("connection", async (socket) => {
       return;
     }
 
-    socket.to(message.room).emit("receive-todo", message);
+    debug("received todo", result.data);
+    socket.to(message.room).emit("receive-todo", result.data);
   });
 
   socket.on("disconnecting", async () => {
