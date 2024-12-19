@@ -5,7 +5,7 @@ import {
   roomJoinedMessage,
 } from "../types/messages.js";
 import { updatedTimerMessage } from "../types/timer.js";
-import { userSchema } from "./userValidation.js";
+import { userSchema } from "./userValidator.js";
 
 const joinRoomMessageSchema = z.object({
   room: z.string(),

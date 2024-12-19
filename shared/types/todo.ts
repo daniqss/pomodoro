@@ -1,3 +1,5 @@
+import { room } from "./messages.js";
+
 export type todo = {
   owner: string;
   title: string;
@@ -15,3 +17,9 @@ export type todoMessage = {
   room: string;
   type: todoMessageType;
 };
+
+export type sendUpdatedTodosMessage = {
+  newUserId: string;
+  todos: todo[];
+};
+export type getTodosMessage = room;
