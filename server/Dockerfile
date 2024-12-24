@@ -1,11 +1,12 @@
 FROM node:22
-
-WORKDIR /pomodoro/server
-COPY server .
-COPY types ../types
 RUN npm install -g pnpm
 
-RUN pnpm install
+WORKDIR /pomodoro
+COPY . .
+
+RUN pnpm install --filter ./server...
+
+WORKDIR /pomodoro/server
 RUN pnpm build
 
 ENV NODE_ENV=production
