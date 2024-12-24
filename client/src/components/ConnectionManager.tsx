@@ -4,7 +4,7 @@ import { useContext, useEffect, useState } from "react";
 import { WsContext, WsContextType } from "../contexts/ws";
 import { user } from "../../../shared/types/user";
 import { userJoinedMessage } from "../../../shared/types/messages";
-import UserValidator from "../../../shared/schemas/userValidation";
+import UserValidator from "../../../shared/schemas/userValidator";
 
 function ConnectionManager() {
   const { socket, userName } = useContext(WsContext) as WsContextType;

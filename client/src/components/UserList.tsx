@@ -3,7 +3,7 @@ import { user } from "../../../shared/types/user";
 import { todo, todoMessage, todoMessageType } from "../../../shared/types/todo";
 import { WsContext, WsContextType } from "../contexts/ws";
 import UserElement from "./UserElement";
-import UserValidator from "../../../shared/schemas/userValidation";
+import UserValidator from "../../../shared/schemas/userValidator";
 
 export default function UserList({ users }: { users: user[] }) {
   const { userName, socket } = useContext(WsContext) as WsContextType;
