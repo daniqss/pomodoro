@@ -18,6 +18,7 @@ function Header({ children }: HeaderProps) {
       <section className="flex flex-row space-x-4">
         <a
           href="https://github.com/daniqss/pomodoro"
+          aria-label="Link to the Github's project repository"
           target="_blank"
           rel="noreferrer"
         >

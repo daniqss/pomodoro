@@ -1,7 +1,6 @@
 import Timer from "./components/Timer";
 import Header from "./components/Header";
 import ConnectionManager from "./components/ConnectionManager";
-// import TodoList from "./components/TodoList";
 
 function App() {
   return (

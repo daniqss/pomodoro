@@ -2,8 +2,9 @@ import ConnectionMenu from "./ConnectionMenu";
 import ConnectionData from "./ConnectionData";
 import { useContext, useEffect, useState } from "react";
 import { WsContext, WsContextType } from "../contexts/ws";
-import { user, userJoinedMessage } from "../../../shared/types/messages";
-import MessageValidator from "../../../shared/schemas/messageValidation";
+import { user } from "../../../shared/types/user";
+import { userJoinedMessage } from "../../../shared/types/messages";
+import UserValidator from "../../../shared/schemas/userValidator";
 
 function ConnectionManager() {
   const { socket, userName } = useContext(WsContext) as WsContextType;
@@ -12,7 +13,7 @@ function ConnectionManager() {
 
   useEffect(() => {
     const handleUserJoined = (userJoinedMessage: userJoinedMessage) => {
-      const result = MessageValidator.validateUser(userJoinedMessage);
+      const result = UserValidator.validateUser(userJoinedMessage);
       if (!result.success) {
         console.error(result.error);
         return;

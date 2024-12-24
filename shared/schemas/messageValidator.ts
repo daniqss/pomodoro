@@ -3,16 +3,11 @@ import {
   joinRoomMessage,
   joinSuccefullyMessage,
   roomJoinedMessage,
-  updatedTimerMessage,
-  user,
 } from "../types/messages.js";
+import { updatedTimerMessage } from "../types/timer.js";
+import { userSchema } from "./userValidator.js";
 
-const userSchema = z.object({
-  id: z.string(),
-  name: z.string(),
-});
-
-const joinRoomMessage = z.object({
+const joinRoomMessageSchema = z.object({
   room: z.string(),
   user: userSchema,
 });
@@ -36,16 +31,12 @@ const updatedTimerMessageSchema = z.object({
 });
 
 export default class MessageValidator {
-  static validateUser(user: user) {
-    return userSchema.safeParse(user);
-  }
-
   static validateRoomCreatedMessage(room: string) {
     return z.string().safeParse(room);
   }
 
   static validateJoinRoomMessage(message: joinRoomMessage) {
-    return joinRoomMessage.safeParse(message);
+    return joinRoomMessageSchema.safeParse(message);
   }
 
   static validateJoinSuccefullyMessage(message: joinSuccefullyMessage) {

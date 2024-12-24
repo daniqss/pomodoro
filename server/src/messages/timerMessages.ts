@@ -1,9 +1,6 @@
 import { Socket } from "socket.io";
-import {
-  getTimerMessage,
-  receiveTimerMessage,
-  updatedTimerMessage,
-} from "../../../shared/types/messages.js";
+import { getTimerMessage } from "../../../shared/types/messages.js";
+import { updatedTimerMessage } from "../../../shared/types/timer.js";
 import { debug } from "console";
 
 class TimerServerMessages {

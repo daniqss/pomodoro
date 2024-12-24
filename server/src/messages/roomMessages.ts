@@ -2,13 +2,13 @@ import { v4 as uuid } from "uuid";
 import { Socket } from "socket.io";
 import debug from "../utils/debug.js";
 import {
-  room,
-  user,
   roomCreatedMessage,
   roomJoinedMessage,
   joinRoomMessage,
 } from "../../../shared/types/messages.js";
+import { user } from "../../../shared/types/user.js";
 import TimerServerMessages from "./timerMessages.js";
+import TodosServerMessages from "./todosMessages.js";
 
 export default class RoomServerMessages {
   // Server creates the room, join the rooms owner and sends a message to him
@@ -47,6 +47,7 @@ export default class RoomServerMessages {
     debug(roomMessage);
 
     TimerServerMessages.getTimer(socket, message.room);
+    TodosServerMessages.getTodos(socket, message.room);
 
     socket.emit("room-joined", roomMessage);
     debug(

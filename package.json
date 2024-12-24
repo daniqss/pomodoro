@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "A simple pomodoro to stay focus in company, powered by SocketIO",
   "scripts": {
-    "install": "cd client && npm install && cd .. && cd server && npm install && cd ..",
+    "install": "cd client && pnpm install && cd .. && cd server && pnpm install && cd ..",
     "dev": "concurrently \"cd client && npm run dev\" \"cd server && npm run dev\"",
     "start": "docker compose up"
   },

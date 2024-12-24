@@ -4,10 +4,10 @@ import {
   joinSuccefullyMessage,
   roomCreatedMessage,
   roomJoinedMessage,
-  user,
 } from "../../../shared/types/messages";
+import { user } from "../../../shared/types/user";
 import { TimerContext, TimerContextType } from "../contexts/timer";
-import MessageValidator from "../../../shared/schemas/messageValidation";
+import MessageValidator from "../../../shared/schemas/messageValidator";
 
 type ConnectionMenuProps = {
   setUsers: React.Dispatch<React.SetStateAction<user[]>>;
