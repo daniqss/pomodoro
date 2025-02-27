@@ -27,6 +27,7 @@
     "url": "https://github.com/daniqss/pomodoro/issues"
   },
   "homepage": "https://github.com/daniqss/pomodoro#readme",
+  "workspaces": ["client", "server"],
   "devDependencies": {
     "concurrently": "^8.2.2"
   },
